@@ -27,13 +27,13 @@ public class Account {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
     @NotNull(message = "Владелец счета обязателен")
-    @Setter
+    @Setter(AccessLevel.PACKAGE)
     private Client client;
 
     @Builder.Default
     @Column(name = "balance", precision = 19, scale = 2, nullable = false)
     @NotNull(message = "Баланс не может быть null")
-    @DecimalMin(value = "0.00", inclusive = true, message = "Баланс не может быть отрицательным")
+    @DecimalMin(value = "0.00", message = "Баланс не может быть отрицательным")
     @Setter(AccessLevel.NONE)
     private BigDecimal balance = BigDecimal.ZERO;
 
