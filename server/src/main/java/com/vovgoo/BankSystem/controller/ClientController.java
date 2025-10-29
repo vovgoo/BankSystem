@@ -3,6 +3,7 @@ package com.vovgoo.BankSystem.controller;
 import com.vovgoo.BankSystem.dto.client.request.CreateClientRequest;
 import com.vovgoo.BankSystem.dto.client.request.SearchClientRequest;
 import com.vovgoo.BankSystem.dto.client.request.UpdateClientRequest;
+import com.vovgoo.BankSystem.dto.client.response.ClientDetailsResponse;
 import com.vovgoo.BankSystem.dto.client.response.ClientResponse;
 import com.vovgoo.BankSystem.dto.common.PageResponse;
 import com.vovgoo.BankSystem.dto.transaction.TransactionResponse;
@@ -26,7 +27,7 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    public ClientResponse get(@PathVariable UUID id) {
+    public ClientDetailsResponse get(@PathVariable UUID id) {
         return clientService.get(id);
     }
 

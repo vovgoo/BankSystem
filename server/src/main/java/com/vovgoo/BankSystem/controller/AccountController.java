@@ -4,13 +4,10 @@ import com.vovgoo.BankSystem.dto.account.request.CreateAccountRequest;
 import com.vovgoo.BankSystem.dto.account.request.DepositAccountRequest;
 import com.vovgoo.BankSystem.dto.account.request.TransferAccountRequest;
 import com.vovgoo.BankSystem.dto.account.request.WithdrawAccountRequest;
-import com.vovgoo.BankSystem.dto.account.response.AccountResponse;
-import com.vovgoo.BankSystem.dto.common.PageResponse;
 import com.vovgoo.BankSystem.dto.transaction.TransactionResponse;
 import com.vovgoo.BankSystem.service.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -21,16 +18,6 @@ import java.util.UUID;
 public class AccountController {
 
     private final AccountService accountService;
-
-    @GetMapping
-    public PageResponse<AccountResponse> list(@Valid PageRequest pageRequest) {
-        return accountService.list(pageRequest);
-    }
-
-    @GetMapping("/{id}")
-    public AccountResponse get(@PathVariable UUID id) {
-        return accountService.get(id);
-    }
 
     @PostMapping
     public TransactionResponse create(@RequestBody @Valid CreateAccountRequest createAccountRequest) {
