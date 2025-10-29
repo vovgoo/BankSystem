@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class PageRequest {
+public class PageParams {
 
     @NotNull(message = "Номер страницы обязателен")
     @Min(value = 0, message = "Номер страницы не может быть отрицательным")
