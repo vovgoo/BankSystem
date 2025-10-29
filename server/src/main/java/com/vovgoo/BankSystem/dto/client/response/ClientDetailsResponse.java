@@ -12,10 +12,7 @@ import java.util.UUID;
 public class ClientDetailsResponse {
 
     private final UUID id;
-
     private final String lastName;
-
     private final String phone;
-
     private final List<AccountSummaryResponse> accounts;
 }

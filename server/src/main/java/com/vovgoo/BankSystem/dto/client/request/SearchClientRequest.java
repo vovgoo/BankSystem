@@ -1,6 +1,6 @@
 package com.vovgoo.BankSystem.dto.client.request;
 
-import com.vovgoo.BankSystem.dto.common.PageRequest;
+import com.vovgoo.BankSystem.dto.common.PageParams;
 import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,5 +12,5 @@ public class SearchClientRequest {
     private final String lastName;
 
     @Valid
-    private final PageRequest pageRequest;
+    private final PageParams pageParams;
 }

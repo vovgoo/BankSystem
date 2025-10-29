@@ -11,6 +11,5 @@ import java.util.UUID;
 public class AccountSummaryResponse {
 
     private final UUID id;
-
     private final BigDecimal balance;
 }

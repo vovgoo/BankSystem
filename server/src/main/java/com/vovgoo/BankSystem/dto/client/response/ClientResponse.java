@@ -11,10 +11,7 @@ import java.util.UUID;
 public class ClientResponse {
 
     private final UUID id;
-
     private final String lastName;
-
     private final String phone;
-
     private final BigDecimal totalBalance;
 }
