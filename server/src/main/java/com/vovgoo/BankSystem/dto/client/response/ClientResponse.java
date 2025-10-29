@@ -1,10 +1,9 @@
 package com.vovgoo.BankSystem.dto.client.response;
 
-import com.vovgoo.BankSystem.dto.account.response.AccountSummaryResponse;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.List;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
@@ -17,5 +16,5 @@ public class ClientResponse {
 
     private final String phone;
 
-    private final List<AccountSummaryResponse> accounts;
+    private final BigDecimal totalBalance;
 }
