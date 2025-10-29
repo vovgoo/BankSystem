@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: BankSystem
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/BankSystem}
+    username: ${SPRING_DATASOURCE_USERNAME:vovgoo}
+    password: ${SPRING_DATASOURCE_PASSWORD:StrongestLocalPassword}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    show-sql: ${SPRING_JPA_SHOW_SQL:true}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: ${SPRING_HIBERNATE_FORMAT_SQL:true}
