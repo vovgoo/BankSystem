@@ -13,9 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "clients")
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(exclude = "accounts")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Client {
@@ -24,7 +22,6 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.UUID)
     @EqualsAndHashCode.Include
     @Getter
-    @Setter(AccessLevel.NONE)
     private UUID id;
 
     @Column(name = "last_name", nullable = false)
@@ -35,7 +32,6 @@ public class Client {
             message = "Фамилия должна быть одним словом или двойная через тире"
     )
     @Getter
-    @Setter
     private String lastName;
 
     @Column(name = "phone", nullable = false, unique = true)
@@ -45,8 +41,14 @@ public class Client {
             message = "Телефон должен быть в формате +375XXXXXXXXX"
     )
     @Getter
-    @Setter
     private String phone;
+
+    public Client(String lastName, String phone) {
+        if (lastName == null || lastName.isBlank()) throw new IllegalArgumentException("Фамилия обязательна для создания клиента");
+        if (phone == null || phone.isBlank()) throw new IllegalArgumentException("Телефон обязателен для создания клиента");
+        this.lastName = lastName;
+        this.phone = phone;
+    }
 
     @OneToMany(
             mappedBy = "client",
@@ -54,13 +56,20 @@ public class Client {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @Builder.Default
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<Account> accounts = new ArrayList<>();
+    private final List<Account> accounts = new ArrayList<>();
 
     public List<Account> getAccounts() {
         return Collections.unmodifiableList(accounts);
+    }
+
+    public void updateLastName(String lastName) {
+        if (lastName == null || lastName.isBlank()) throw new IllegalArgumentException("Фамилия обязательна");
+        this.lastName = lastName;
+    }
+
+    public void updatePhone(String phone) {
+        if (phone == null || phone.isBlank()) throw new IllegalArgumentException("Телефон обязателен");
+        this.phone = phone;
     }
 
     public void addAccount(Account account) {

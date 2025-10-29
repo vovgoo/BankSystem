@@ -11,9 +11,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "accounts")
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor(access =  AccessLevel.PROTECTED)
 @ToString(exclude = "client")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Account {
@@ -21,7 +19,6 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @EqualsAndHashCode.Include
-    @Setter(AccessLevel.NONE)
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,12 +27,15 @@ public class Account {
     @Setter(AccessLevel.PACKAGE)
     private Client client;
 
-    @Builder.Default
     @Column(name = "balance", precision = 19, scale = 2, nullable = false)
     @NotNull(message = "Баланс не может быть null")
     @DecimalMin(value = "0.00", message = "Баланс не может быть отрицательным")
-    @Setter(AccessLevel.NONE)
     private BigDecimal balance = BigDecimal.ZERO;
+
+    public Account(Client client) {
+        if (client == null) throw new IllegalArgumentException("Клиент обязателен для открытия счета");
+        this.client = client;
+    }
 
     public void deposit(BigDecimal amount) {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
