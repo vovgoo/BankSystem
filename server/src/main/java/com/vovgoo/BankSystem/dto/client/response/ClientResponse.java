@@ -10,8 +10,12 @@ import java.util.UUID;
 @Getter
 @Builder
 public class ClientResponse {
+
     private final UUID id;
+
     private final String lastName;
+
     private final String phone;
+
     private final List<AccountSummaryResponse> accounts;
 }
