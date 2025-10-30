@@ -17,6 +17,9 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: ${SPRING_HIBERNATE_FORMAT_SQL:true}
 
+transaction:
+  transfer-commission-percent: 5
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

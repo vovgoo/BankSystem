@@ -1,4 +1,4 @@
-package com.vovgoo.BankSystem.config;
+package com.vovgoo.BankSystem.config.swagger;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
