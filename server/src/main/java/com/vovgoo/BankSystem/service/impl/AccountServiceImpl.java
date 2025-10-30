@@ -16,18 +16,21 @@ import com.vovgoo.BankSystem.service.AccountService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
     private final ClientRepository clientRepository;
 
     @Override
+    @Transactional
     public TransactionResponse create(CreateAccountRequest createAccountRequest) {
         UUID clientId = createAccountRequest.getClientId();
 
@@ -42,6 +45,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public TransactionResponse delete(UUID id) {
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Счёт не найден"));
@@ -56,6 +60,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public TransactionResponse deposit(DepositAccountRequest depositAccountRequest) {
         Account account = accountRepository.findById(depositAccountRequest.getAccountId())
                 .orElseThrow(() -> new EntityNotFoundException("Счёт не найден"));
@@ -68,6 +73,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public TransactionResponse withdraw(WithdrawAccountRequest withdrawAccountRequest) {
         Account account = accountRepository.findById(withdrawAccountRequest.getAccountId())
                 .orElseThrow(() -> new EntityNotFoundException("Счёт не найден"));
@@ -84,6 +90,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public TransactionResponse transfer(TransferAccountRequest transferAccountRequest) {
         if (transferAccountRequest.getFromAccountId().equals(transferAccountRequest.getToAccountId())) {
             throw new SameAccountTransferException();

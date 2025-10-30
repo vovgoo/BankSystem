@@ -22,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
@@ -68,6 +70,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional
     public TransactionResponse create(CreateClientRequest createClientRequest) {
         if (clientRepository.existsByPhone(createClientRequest.getPhone())) {
             throw new ClientAlreadyExistsException(createClientRequest.getPhone());
@@ -81,6 +84,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional
     public TransactionResponse update(UpdateClientRequest updateClientRequest) {
         Client client = clientRepository.findById(updateClientRequest.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Клиент не найден"));
@@ -99,6 +103,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional
     public TransactionResponse delete(UUID id) {
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Клиент не найден"));
