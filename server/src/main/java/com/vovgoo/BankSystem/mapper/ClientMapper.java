@@ -7,36 +7,39 @@ import com.vovgoo.BankSystem.entity.Client;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.List;
 
 @Component
 public class ClientMapper {
 
-    public ClientDetailsResponse to(Client client) {
+    public ClientDetailsResponse toClientDetailsResponse(Client client) {
         if (client == null) return null;
 
-        return ClientDetailsResponse.builder()
-                .id(client.getId())
-                .lastName(client.getLastName())
-                .phone(client.getPhone())
-                .accounts(client.getAccounts()
-                        .stream()
-                        .map(account -> AccountSummaryResponse.builder()
-                                .id(account.getId())
-                                .balance(account.getBalance())
-                                .build())
-                        .collect(Collectors.toList()))
-                .build();
+        List<AccountSummaryResponse> accounts = Collections.emptyList();
+
+        if (client.getAccounts() != null && !client.getAccounts().isEmpty()) {
+            accounts = client.getAccounts().stream()
+                    .map(account -> new AccountSummaryResponse(account.getId(), account.getBalance()))
+                    .toList();
+        }
+
+        return new ClientDetailsResponse(
+                client.getId(),
+                client.getLastName(),
+                client.getPhone(),
+                accounts
+        );
     }
 
-    public ClientResponse to(Client client, BigDecimal totalBalance) {
+    public ClientResponse toClientResponse(Client client, BigDecimal totalBalance) {
         if (client == null) return null;
 
-        return ClientResponse.builder()
-                .id(client.getId())
-                .lastName(client.getLastName())
-                .phone(client.getPhone())
-                .totalBalance(totalBalance)
-                .build();
+        return new ClientResponse(
+                client.getId(),
+                client.getLastName(),
+                client.getPhone(),
+                totalBalance
+        );
     }
 }
