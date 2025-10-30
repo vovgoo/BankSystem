@@ -1,12 +1,14 @@
 package com.vovgoo.BankSystem.dto.common;
 
-import lombok.Builder;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 @Getter
-@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PageResponse<T> {
 
     private final List<T> content;
@@ -15,17 +17,11 @@ public class PageResponse<T> {
     private final long totalElements;
     private final int totalPages;
 
-    public static <T> PageResponse<T> of(List<T> content, int pageNumber, int pageSize, long totalElements) {
-        List<T> safeContent = content != null ? content : List.of();
-        int safePageSize = pageSize > 0 ? pageSize : 1;
-        int totalPages = (int) Math.ceil((double) totalElements / safePageSize);
+    public static <T> PageResponse<T> of(Page<T> page) {
+        if (page == null) {
+            return new PageResponse<>(List.of(), 0, 0, 0, 0);
+        }
 
-        return PageResponse.<T>builder()
-                .content(safeContent)
-                .pageNumber(pageNumber)
-                .pageSize(safePageSize)
-                .totalElements(totalElements)
-                .totalPages(totalPages)
-                .build();
+        return new PageResponse<>(page.getContent(), page.getNumber(), page.getSize(), page.getTotalElements(), page.getTotalPages());
     }
 }
