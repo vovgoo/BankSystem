@@ -1,8 +1,6 @@
 package com.vovgoo.BankSystem.dto.stats;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Map;
 
 public record StatsResponse(
         long totalClients,
@@ -12,9 +10,5 @@ public record StatsResponse(
         BigDecimal totalBalance,
         BigDecimal averageBalance,
         BigDecimal maxBalance,
-        BigDecimal minBalance,
-        long accountsOpenedLastMonth,
-        long accountsClosedLastMonth,
-        Map<LocalDate, Long> newClientsPerDay,
-        Map<LocalDate, Long> newAccountsPerDay
+        BigDecimal minBalance
 ) {}
