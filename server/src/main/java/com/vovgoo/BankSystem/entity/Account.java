@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.UUID;
 
 @Entity
@@ -41,16 +42,22 @@ public class Account {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Сумма пополнения должна быть положительной");
         }
-        balance = balance.add(amount);
+        if (amount.scale() > 2) {
+            throw new IllegalArgumentException("Сумма не может иметь больше 2 знаков после запятой");
+        }
+        balance = balance.add(amount).setScale(2, RoundingMode.HALF_UP);
     }
 
     public void withdraw(BigDecimal amount) {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Сумма снятия должна быть положительной");
         }
+        if (amount.scale() > 2) {
+            throw new IllegalArgumentException("Сумма не может иметь больше 2 знаков после запятой");
+        }
         if (balance.compareTo(amount) < 0) {
             throw new IllegalStateException("Недостаточно средств");
         }
-        balance = balance.subtract(amount);
+        balance = balance.subtract(amount).setScale(2, RoundingMode.HALF_UP);
     }
 }
