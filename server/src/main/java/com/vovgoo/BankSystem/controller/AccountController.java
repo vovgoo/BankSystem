@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -24,31 +26,37 @@ public class AccountController {
 
     @Operation(summary = "Создать счёт", description = "Создаёт новый банковский счёт")
     @PostMapping
-    public TransactionResponse create(@RequestBody @Valid CreateAccountRequest createAccountRequest) {
-        return accountService.create(createAccountRequest);
+    public ResponseEntity<TransactionResponse> create(
+            @RequestBody @Valid CreateAccountRequest createAccountRequest) {
+        TransactionResponse resp = accountService.create(createAccountRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(resp);
     }
 
     @Operation(summary = "Удалить счёт", description = "Удаляет счёт по ID")
     @DeleteMapping("/{id}")
-    public TransactionResponse delete(@PathVariable UUID id) {
-        return accountService.delete(id);
+    public ResponseEntity<TransactionResponse> delete(@PathVariable UUID id) {
+        TransactionResponse resp = accountService.delete(id);
+        return ResponseEntity.ok(resp);
     }
 
     @Operation(summary = "Пополнить счёт", description = "Внести средства на счёт")
     @PostMapping("/deposit")
-    public TransactionResponse deposit(@RequestBody @Valid DepositAccountRequest depositAccountRequest) {
-        return accountService.deposit(depositAccountRequest);
+    public ResponseEntity<TransactionResponse> deposit(@RequestBody @Valid DepositAccountRequest depositAccountRequest) {
+        TransactionResponse resp = accountService.deposit(depositAccountRequest);
+        return ResponseEntity.ok(resp);
     }
 
     @Operation(summary = "Снять средства", description = "Снять средства со счёта")
     @PostMapping("/withdraw")
-    public TransactionResponse withdraw(@RequestBody @Valid WithdrawAccountRequest withdrawAccountRequest) {
-        return accountService.withdraw(withdrawAccountRequest);
+    public ResponseEntity<TransactionResponse> withdraw(@RequestBody @Valid WithdrawAccountRequest withdrawAccountRequest) {
+        TransactionResponse resp = accountService.withdraw(withdrawAccountRequest);
+        return ResponseEntity.ok(resp);
     }
 
     @Operation(summary = "Перевести средства", description = "Перевести средства между счетами")
     @PostMapping("/transfer")
-    public TransactionResponse transfer(@RequestBody @Valid TransferAccountRequest transferAccountRequest) {
-        return accountService.transfer(transferAccountRequest);
+    public ResponseEntity<TransactionResponse> transfer(@RequestBody @Valid TransferAccountRequest transferAccountRequest) {
+        TransactionResponse resp = accountService.transfer(transferAccountRequest);
+        return ResponseEntity.ok(resp);
     }
 }
