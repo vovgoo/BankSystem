@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ClientRepository extends JpaRepository<Client, UUID> {
@@ -20,6 +21,13 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
         GROUP BY c.id
     """)
     Page<ClientResponse> findClientSummaries(@Param("lastName") String lastName, Pageable pageable);
+
+    @Query("""
+        SELECT c FROM Client c
+        LEFT JOIN FETCH c.accounts
+        WHERE c.id = :id
+    """)
+    Optional<Client> findByIdWithAccounts(@Param("id") UUID id);
 
     boolean existsByPhone(String phone);
 }

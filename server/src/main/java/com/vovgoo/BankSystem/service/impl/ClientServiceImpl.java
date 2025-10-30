@@ -45,7 +45,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ClientDetailsResponse get(UUID id) {
-        Client client = clientRepository.findById(id)
+        Client client = clientRepository.findByIdWithAccounts(id)
                 .orElseThrow(() -> new EntityNotFoundException("Клиент не найден"));
 
         return clientMapper.toClientDetailsResponse(client);
