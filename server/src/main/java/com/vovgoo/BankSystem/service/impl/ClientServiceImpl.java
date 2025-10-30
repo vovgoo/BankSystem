@@ -8,7 +8,6 @@ import com.vovgoo.BankSystem.dto.client.response.ClientResponse;
 import com.vovgoo.BankSystem.dto.common.PageParams;
 import com.vovgoo.BankSystem.dto.common.PageResponse;
 import com.vovgoo.BankSystem.dto.transaction.TransactionResponse;
-import com.vovgoo.BankSystem.entity.Account;
 import com.vovgoo.BankSystem.entity.Client;
 import com.vovgoo.BankSystem.exception.client.ClientAlreadyExistsException;
 import com.vovgoo.BankSystem.exception.client.ClientHasActiveAccountsException;
@@ -24,8 +23,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -39,25 +36,11 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public PageResponse<ClientResponse> search(SearchClientRequest searchClientRequest, PageParams pageParams) {
-        String lastName = searchClientRequest.getLastName();
+        Pageable pageable = PageRequest.of(pageParams.page(), pageParams.size());
 
-        Pageable pageable = PageRequest.of(pageParams.getPage(), pageParams.getSize());
+        Page<ClientResponse> clientsPage = clientRepository.findClientSummaries(searchClientRequest.lastName(), pageable);
 
-        Page<Client> clientsPage;
-
-        if (lastName == null || lastName.isBlank()) {
-            clientsPage = clientRepository.findAll(pageable);
-        } else {
-            clientsPage = clientRepository.findByLastNameContainingIgnoreCase(lastName, pageable);
-        }
-
-        List<ClientResponse> content = clientsPage.stream()
-                .map(client -> clientMapper.to(client, client.getAccounts().stream()
-                        .map(Account::getBalance)
-                        .reduce(BigDecimal.ZERO, BigDecimal::add)))
-                .toList();
-
-        return PageResponse.of(content, clientsPage.getNumber(), clientsPage.getSize(), clientsPage.getTotalElements());
+        return PageResponse.of(clientsPage);
     }
 
     @Override
@@ -65,17 +48,17 @@ public class ClientServiceImpl implements ClientService {
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Клиент не найден"));
 
-        return clientMapper.to(client);
+        return clientMapper.toClientDetailsResponse(client);
     }
 
     @Override
     @Transactional
     public TransactionResponse create(CreateClientRequest createClientRequest) {
-        if (clientRepository.existsByPhone(createClientRequest.getPhone())) {
-            throw new ClientAlreadyExistsException(createClientRequest.getPhone());
+        if (clientRepository.existsByPhone(createClientRequest.phone())) {
+            throw new ClientAlreadyExistsException(createClientRequest.phone());
         }
 
-        Client client = new Client(createClientRequest.getLastName(), createClientRequest.getPhone());
+        Client client = new Client(createClientRequest.lastName(), createClientRequest.phone());
 
         clientRepository.save(client);
 
@@ -85,17 +68,17 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional
     public TransactionResponse update(UpdateClientRequest updateClientRequest) {
-        Client client = clientRepository.findById(updateClientRequest.getId())
+        Client client = clientRepository.findById(updateClientRequest.id())
                 .orElseThrow(() -> new EntityNotFoundException("Клиент не найден"));
 
-        String newPhone = updateClientRequest.getPhone();
+        String newPhone = updateClientRequest.phone();
 
         if (!client.getPhone().equals(newPhone) && clientRepository.existsByPhone(newPhone)) {
             throw new ClientAlreadyExistsException(newPhone);
         }
 
-        client.updateLastName(updateClientRequest.getLastName());
-        client.updatePhone(newPhone);
+        client.setLastName(updateClientRequest.lastName());
+        client.setPhone(newPhone);
 
         clientRepository.save(client);
         return TransactionResponse.approve("Данные клиента успешно обновлены");
