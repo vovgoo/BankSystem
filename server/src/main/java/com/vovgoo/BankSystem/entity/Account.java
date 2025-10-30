@@ -24,17 +24,17 @@ public class Account {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
     @NotNull(message = "Владелец счета обязателен")
-    @Setter(AccessLevel.PACKAGE)
     private Client client;
 
     @Column(name = "balance", precision = 19, scale = 2, nullable = false)
-    @NotNull(message = "Баланс не может быть null")
+    @NotNull(message = "Баланс не может быть пустым")
     @DecimalMin(value = "0.00", message = "Баланс не может быть отрицательным")
-    private BigDecimal balance = BigDecimal.ZERO;
+    private BigDecimal balance;
 
     public Account(Client client) {
         if (client == null) throw new IllegalArgumentException("Клиент обязателен для открытия счета");
         this.client = client;
+        this.balance = BigDecimal.ZERO;
     }
 
     public void deposit(BigDecimal amount) {

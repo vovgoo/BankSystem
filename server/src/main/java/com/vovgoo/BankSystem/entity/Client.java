@@ -6,10 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "clients")
@@ -43,41 +40,33 @@ public class Client {
     @Getter
     private String phone;
 
-    public Client(String lastName, String phone) {
-        if (lastName == null || lastName.isBlank()) throw new IllegalArgumentException("Фамилия обязательна для создания клиента");
-        if (phone == null || phone.isBlank()) throw new IllegalArgumentException("Телефон обязателен для создания клиента");
-        this.lastName = lastName;
-        this.phone = phone;
-    }
-
     @OneToMany(
             mappedBy = "client",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private final List<Account> accounts = new ArrayList<>();
+    private List<Account> accounts;
+
+    public Client(String lastName, String phone) {
+        if (lastName == null || lastName.isBlank()) throw new IllegalArgumentException("Фамилия обязательна для создания клиента");
+        if (phone == null || phone.isBlank()) throw new IllegalArgumentException("Телефон обязателен для создания клиента");
+        this.lastName = lastName;
+        this.phone = phone;
+        this.accounts = new ArrayList<>();
+    }
 
     public List<Account> getAccounts() {
         return Collections.unmodifiableList(accounts);
     }
 
-    public void updateLastName(String lastName) {
+    public void setLastName(String lastName) {
         if (lastName == null || lastName.isBlank()) throw new IllegalArgumentException("Фамилия обязательна");
         this.lastName = lastName;
     }
 
-    public void updatePhone(String phone) {
+    public void setPhone(String phone) {
         if (phone == null || phone.isBlank()) throw new IllegalArgumentException("Телефон обязателен");
         this.phone = phone;
-    }
-
-    public void addAccount(Account account) {
-        accounts.add(account);
-        account.setClient(this);
-    }
-
-    public void removeAccount(Account account) {
-        accounts.remove(account);
     }
 }
