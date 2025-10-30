@@ -1,5 +1,6 @@
 package com.vovgoo.BankSystem.service.impl;
 
+import com.vovgoo.BankSystem.config.properties.TransactionProperties;
 import com.vovgoo.BankSystem.dto.account.request.CreateAccountRequest;
 import com.vovgoo.BankSystem.dto.account.request.DepositAccountRequest;
 import com.vovgoo.BankSystem.dto.account.request.TransferAccountRequest;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.UUID;
 
 @Service
@@ -28,11 +30,12 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
     private final ClientRepository clientRepository;
+    private final TransactionProperties transactionProperties;
 
     @Override
     @Transactional
     public TransactionResponse create(CreateAccountRequest createAccountRequest) {
-        UUID clientId = createAccountRequest.getClientId();
+        UUID clientId = createAccountRequest.clientId();
 
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new EntityNotFoundException("Клиент не найден"));
@@ -62,48 +65,49 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public TransactionResponse deposit(DepositAccountRequest depositAccountRequest) {
-        Account account = accountRepository.findById(depositAccountRequest.getAccountId())
+        Account account = accountRepository.findById(depositAccountRequest.accountId())
                 .orElseThrow(() -> new EntityNotFoundException("Счёт не найден"));
 
-        account.deposit(depositAccountRequest.getAmount());
+        account.deposit(depositAccountRequest.amount());
 
         accountRepository.save(account);
 
-        return TransactionResponse.approve("Счёт успешно пополнен на сумму " + depositAccountRequest.getAmount());
+        return TransactionResponse.approve("Счёт успешно пополнен на сумму " + depositAccountRequest.amount());
     }
 
     @Override
     @Transactional
     public TransactionResponse withdraw(WithdrawAccountRequest withdrawAccountRequest) {
-        Account account = accountRepository.findById(withdrawAccountRequest.getAccountId())
+        Account account = accountRepository.findById(withdrawAccountRequest.accountId())
                 .orElseThrow(() -> new EntityNotFoundException("Счёт не найден"));
 
-        if (account.getBalance().compareTo(withdrawAccountRequest.getAmount()) < 0) {
+        if (account.getBalance().compareTo(withdrawAccountRequest.amount()) < 0) {
             throw new InsufficientFundsException();
         }
 
-        account.withdraw(withdrawAccountRequest.getAmount());
+        account.withdraw(withdrawAccountRequest.amount());
 
         accountRepository.save(account);
 
-        return TransactionResponse.approve("Со счёта успешно снято " + withdrawAccountRequest.getAmount());
+        return TransactionResponse.approve("Со счёта успешно снято " + withdrawAccountRequest.amount());
     }
 
     @Override
     @Transactional
     public TransactionResponse transfer(TransferAccountRequest transferAccountRequest) {
-        if (transferAccountRequest.getFromAccountId().equals(transferAccountRequest.getToAccountId())) {
+        if (transferAccountRequest.fromAccountId().equals(transferAccountRequest.toAccountId())) {
             throw new SameAccountTransferException();
         }
 
-        Account fromAccount = accountRepository.findById(transferAccountRequest.getFromAccountId())
+        Account fromAccount = accountRepository.findById(transferAccountRequest.fromAccountId())
                 .orElseThrow(() -> new EntityNotFoundException("Счёт отправителя не найден"));
 
-        Account toAccount = accountRepository.findById(transferAccountRequest.getToAccountId())
+        Account toAccount = accountRepository.findById(transferAccountRequest.toAccountId())
                 .orElseThrow(() -> new EntityNotFoundException("Счёт получателя не найден"));
 
-        BigDecimal amount = transferAccountRequest.getAmount();
-        BigDecimal commission = amount.multiply(new BigDecimal("0.05"));
+        BigDecimal amount = transferAccountRequest.amount();
+        BigDecimal commission = amount.multiply(BigDecimal.valueOf(transactionProperties.getTransferCommissionPercent()))
+                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
         BigDecimal total = amount.add(commission);
 
         if (fromAccount.getBalance().compareTo(total) < 0) {
