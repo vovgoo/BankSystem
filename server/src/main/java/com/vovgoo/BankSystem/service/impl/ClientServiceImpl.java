@@ -38,9 +38,8 @@ public class ClientServiceImpl implements ClientService {
     private final ClientMapper clientMapper;
 
     @Override
-    public PageResponse<ClientResponse> search(SearchClientRequest searchClientRequest) {
+    public PageResponse<ClientResponse> search(SearchClientRequest searchClientRequest, PageParams pageParams) {
         String lastName = searchClientRequest.getLastName();
-        PageParams pageParams = searchClientRequest.getPageParams();
 
         Pageable pageable = PageRequest.of(pageParams.getPage(), pageParams.getSize());
 

@@ -5,6 +5,7 @@ import com.vovgoo.BankSystem.dto.client.request.SearchClientRequest;
 import com.vovgoo.BankSystem.dto.client.request.UpdateClientRequest;
 import com.vovgoo.BankSystem.dto.client.response.ClientDetailsResponse;
 import com.vovgoo.BankSystem.dto.client.response.ClientResponse;
+import com.vovgoo.BankSystem.dto.common.PageParams;
 import com.vovgoo.BankSystem.dto.common.PageResponse;
 import com.vovgoo.BankSystem.dto.transaction.TransactionResponse;
 import com.vovgoo.BankSystem.service.ClientService;
@@ -28,8 +29,8 @@ public class ClientController {
 
     @Operation(summary = "Поиск клиентов", description = "Поиск клиентов по параметрам")
     @GetMapping("/search")
-    public ResponseEntity<PageResponse<ClientResponse>> search(@Valid SearchClientRequest searchClientRequest) {
-        PageResponse<ClientResponse> result = clientService.search(searchClientRequest);
+    public ResponseEntity<PageResponse<ClientResponse>> search(@Valid SearchClientRequest searchClientRequest, @Valid PageParams pageParams) {
+        PageResponse<ClientResponse> result = clientService.search(searchClientRequest, pageParams);
         return ResponseEntity.ok(result);
     }
 

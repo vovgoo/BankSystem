@@ -10,7 +10,4 @@ import lombok.Getter;
 public class SearchClientRequest {
 
     private final String lastName;
-
-    @Valid
-    private final PageParams pageParams;
 }
