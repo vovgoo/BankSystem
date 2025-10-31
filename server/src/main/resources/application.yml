@@ -17,8 +17,18 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: ${SPRING_HIBERNATE_FORMAT_SQL:true}
 
-transaction:
-  transfer-commission-percent: 5
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
 
 springdoc:
   swagger-ui:
@@ -32,3 +42,6 @@ logging:
     com.vovgoo.BankSystem: DEBUG
   pattern:
     console: "[%level] %d{yyyy-MM-dd HH:mm:ss} - %logger{36}.%M - %msg%n"
+
+transaction:
+  transfer-commission-percent: 5
