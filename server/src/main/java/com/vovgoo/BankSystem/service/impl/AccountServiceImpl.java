@@ -22,7 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -114,11 +117,22 @@ public class AccountServiceImpl implements AccountService {
             throw new SameAccountTransferException();
         }
 
-        Account fromAccount = accountRepository.findById(transferAccountRequest.fromAccountId())
-                .orElseThrow(() -> new EntityNotFoundException("Счёт отправителя не найден"));
+        List<UUID> accountIds = List.of(
+                transferAccountRequest.fromAccountId(),
+                transferAccountRequest.toAccountId()
+        );
 
-        Account toAccount = accountRepository.findById(transferAccountRequest.toAccountId())
-                .orElseThrow(() -> new EntityNotFoundException("Счёт получателя не найден"));
+        List<Account> accounts = accountRepository.findByIdIn(accountIds);
+
+        Map<UUID, Account> accountMap = accounts.stream()
+                .collect(Collectors.toMap(Account::getId, a -> a));
+
+        Account fromAccount = accountMap.get(transferAccountRequest.fromAccountId());
+        Account toAccount = accountMap.get(transferAccountRequest.toAccountId());
+
+        if (fromAccount == null || toAccount == null) {
+            throw new EntityNotFoundException("Один из счетов не найден");
+        }
 
         BigDecimal amount = transferAccountRequest.amount();
         BigDecimal commission = amount.multiply(BigDecimal.valueOf(transactionProperties.getTransferCommissionPercent()))
@@ -134,8 +148,7 @@ public class AccountServiceImpl implements AccountService {
         fromAccount.withdraw(total);
         toAccount.deposit(amount);
 
-        accountRepository.save(fromAccount);
-        accountRepository.save(toAccount);
+        accountRepository.saveAll(accounts);
 
         log.info("Перевод выполнен: fromAccountId={}, toAccountId={}, amount={}, commission={}",
                 fromAccount.getId(), toAccount.getId(), amount, commission);
