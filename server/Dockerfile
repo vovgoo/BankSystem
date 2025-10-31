@@ -2,7 +2,7 @@ FROM gradle:8.10-jdk21 AS builder
 
 WORKDIR /app
 
-COPY build.gradle settings.gradle gradle.properties ./ 
+COPY build.gradle settings.gradle ./ 
 COPY src ./src
 
 RUN gradle clean build -x test
