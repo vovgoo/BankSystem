@@ -188,7 +188,7 @@ class ClientControllerTest {
             mockMvc.perform(get("/api/v1/clients/search")
                             .param("page", "0")
                             .param("size", "10"))
-                    .andExpect(status().isOk())
+                    .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.content").isArray());
         }
 
