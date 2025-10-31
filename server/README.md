@@ -56,23 +56,23 @@
 
 ```
 ┌─────────────────────────────────────────┐
-│         Controller Layer                 │
-│   (REST API, Swagger Documentation)      │
+│         Controller Layer                │
+│   (REST API, Swagger Documentation)     │
 └─────────────────┬───────────────────────┘
                   │
 ┌─────────────────▼───────────────────────┐
-│         Service Layer                    │
-│   (Business Logic, Transactions)          │
+│         Service Layer                   │
+│   (Business Logic, Transactions)        │
 └─────────────────┬───────────────────────┘
                   │
 ┌─────────────────▼───────────────────────┐
-│       Repository Layer                   │
-│   (Data Access, JPA/Hibernate)           │
+│       Repository Layer                  │
+│   (Data Access, JPA/Hibernate)          │
 └─────────────────┬───────────────────────┘
                   │
 ┌─────────────────▼───────────────────────┐
-│         Entity Layer                     │
-│   (Domain Models, JPA Entities)          │
+│         Entity Layer                    │
+│   (Domain Models, JPA Entities)         │
 └─────────────────────────────────────────┘
 ```
 
