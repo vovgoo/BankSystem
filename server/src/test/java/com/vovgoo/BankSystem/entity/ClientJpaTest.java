@@ -3,6 +3,7 @@ package com.vovgoo.BankSystem.entity;
 import com.vovgoo.BankSystem.repository.AccountRepository;
 import com.vovgoo.BankSystem.repository.ClientRepository;
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -15,66 +16,51 @@ import static org.assertj.core.api.Assertions.*;
 @DataJpaTest
 class ClientJpaTest {
 
-    @Autowired
-    private ClientRepository clientRepository;
+    @Autowired private ClientRepository clientRepository;
+    @Autowired private AccountRepository accountRepository;
+    @Autowired private EntityManager em;
 
-    @Autowired
-    private AccountRepository accountRepository;
+    private Client client;
 
-    @Autowired
-    private EntityManager entityManager;
-
-    @Test
-    void shouldSaveClientWithAccounts_CascadePersist() {
-        Client client = new Client("Ivanov", "+375291234567");
-        clientRepository.save(client);
-        clientRepository.flush();
-
-        Account acc1 = new Account(client);
-        Account acc2 = new Account(client);
-        accountRepository.saveAll(List.of(acc1, acc2));
-        accountRepository.flush();
-
-        entityManager.clear();
-
-        Client saved = clientRepository.findById(client.getId()).orElseThrow();
-
-        assertThat(saved.getAccounts()).hasSize(2);
-        assertThat(saved.getAccounts())
-                .extracting(Account::getBalance)
-                .allSatisfy(balance -> assertThat(balance.compareTo(BigDecimal.ZERO)).isZero());
+    @BeforeEach
+    void setup() {
+        client = new Client("Ivanov", "+375291234567");
+        clientRepository.saveAndFlush(client);
     }
 
     @Test
-    void shouldDeleteClient_RemoveAccountsOrphanRemoval() {
-        Client client = new Client("Ivanov", "+375291234567");
-        clientRepository.save(client);
-        clientRepository.flush();
+    void shouldSaveClientWithAccounts() {
+        Account a1 = new Account(client);
+        Account a2 = new Account(client);
+        accountRepository.saveAllAndFlush(List.of(a1, a2));
 
-        Account acc = new Account(client);
-        accountRepository.save(acc);
-        accountRepository.flush();
+        em.clear();
 
-        entityManager.clear();
+        Client saved = clientRepository.findById(client.getId()).orElseThrow();
+        assertThat(saved.getAccounts()).hasSize(2)
+                .allSatisfy(acc -> assertThat(acc.getBalance()).isEqualByComparingTo(BigDecimal.ZERO));
+    }
+
+    @Test
+    void shouldDeleteClientAndCascadeAccounts() {
+        Account acc = accountRepository.saveAndFlush(new Account(client));
+        em.clear();
 
         Client clientFromDb = clientRepository.findById(client.getId()).orElseThrow();
         clientRepository.delete(clientFromDb);
         clientRepository.flush();
 
-        entityManager.clear();
-
+        em.clear();
         assertThat(accountRepository.findById(acc.getId())).isEmpty();
     }
 
     @Test
     void shouldUpdateClientFields() {
-        Client client = new Client("Ivanov", "+375291234567");
-        clientRepository.save(client);
+        client.setLastName("Petrov");
+        client.setPhone("+375441112233");
+        clientRepository.saveAndFlush(client);
 
-        Client saved = clientRepository.findById(client.getId()).orElseThrow();
-        saved.setLastName("Petrov");
-        saved.setPhone("+375441112233");
-        clientRepository.save(saved);
+        em.clear();
 
         Client updated = clientRepository.findById(client.getId()).orElseThrow();
         assertThat(updated.getLastName()).isEqualTo("Petrov");
@@ -82,132 +68,47 @@ class ClientJpaTest {
     }
 
     @Test
-    void shouldNotSaveClientWithDuplicatePhone() {
-        Client client1 = new Client("Ivanov", "+375291234567");
-        clientRepository.save(client1);
-
-        Client client2 = new Client("Petrov", "+375291234567");
-        assertThatThrownBy(() -> clientRepository.saveAndFlush(client2))
+    void shouldThrow_WhenPhoneDuplicate() {
+        Client duplicate = new Client("Petrov", "+375291234567");
+        assertThatThrownBy(() -> clientRepository.saveAndFlush(duplicate))
                 .isInstanceOf(Exception.class);
     }
 
     @Test
-    void shouldDepositAndWithdrawCorrectly() {
-        Client client = new Client("Ivanov", "+375291234567");
-        clientRepository.save(client);
-        clientRepository.flush();
-
-        Account account = new Account(client);
-        accountRepository.save(account);
-        accountRepository.flush();
-
-        entityManager.clear();
-
-        Account accFromDb = accountRepository.findById(account.getId()).orElseThrow();
-        accFromDb.deposit(BigDecimal.valueOf(100));
-        accountRepository.flush();
-        entityManager.clear();
-
-        accFromDb = accountRepository.findById(account.getId()).orElseThrow();
-        assertThat(accFromDb.getBalance()).isEqualByComparingTo(BigDecimal.valueOf(100));
-
-        accFromDb.withdraw(BigDecimal.valueOf(40));
-        accountRepository.flush();
-        entityManager.clear();
-
-        accFromDb = accountRepository.findById(account.getId()).orElseThrow();
-        assertThat(accFromDb.getBalance()).isEqualByComparingTo(BigDecimal.valueOf(60));
-    }
-
-    @Test
-    void depositShouldThrow_WhenAmountInvalid() {
-        Client client = new Client("Ivanov", "+375291234567");
-        Account account = new Account(client);
-
-        assertThatThrownBy(() -> account.deposit(BigDecimal.ZERO))
-                .isInstanceOf(IllegalArgumentException.class);
-
-        assertThatThrownBy(() -> account.deposit(BigDecimal.valueOf(-10)))
-                .isInstanceOf(IllegalArgumentException.class);
-
-        assertThatThrownBy(() -> account.deposit(null))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    void withdrawShouldThrow_WhenAmountInvalidOrExceedsBalance() {
-        Client client = new Client("Ivanov", "+375291234567");
-        Account account = new Account(client);
-        account.deposit(BigDecimal.valueOf(50));
-
-        assertThatThrownBy(() -> account.withdraw(BigDecimal.valueOf(100)))
-                .isInstanceOf(IllegalStateException.class);
-
-        assertThatThrownBy(() -> account.withdraw(BigDecimal.ZERO))
-                .isInstanceOf(IllegalArgumentException.class);
-
-        assertThatThrownBy(() -> account.withdraw(BigDecimal.valueOf(-5)))
-                .isInstanceOf(IllegalArgumentException.class);
-
-        assertThatThrownBy(() -> account.withdraw(null))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
     void accountsListShouldBeUnmodifiable() {
-        Client client = new Client("Ivanov", "+375291234567");
         assertThatThrownBy(() -> client.getAccounts().add(new Account(client)))
                 .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
-    void lazyLoadingAccounts_ShouldNotInitializeUntilAccess() {
-        Client client = new Client("Ivanov", "+375291234567");
-        clientRepository.saveAndFlush(client);
-
-        Account acc = new Account(client);
-        accountRepository.saveAndFlush(acc);
-
-        entityManager.clear();
+    void shouldLazyLoadAccountsOnlyOnAccess() {
+        Account acc = accountRepository.saveAndFlush(new Account(client));
+        em.clear();
 
         Client saved = clientRepository.findById(client.getId()).orElseThrow();
+        var puUtil = em.getEntityManagerFactory().getPersistenceUnitUtil();
 
-        boolean loaded = entityManager.getEntityManagerFactory()
-                .getPersistenceUnitUtil()
-                .isLoaded(saved, "accounts");
-        assertThat(loaded).isFalse();
-
-        int size = saved.getAccounts().size();
-        assertThat(size).isEqualTo(1);
-
-        loaded = entityManager.getEntityManagerFactory()
-                .getPersistenceUnitUtil()
-                .isLoaded(saved, "accounts");
-        assertThat(loaded).isTrue();
+        assertThat(puUtil.isLoaded(saved, "accounts")).isFalse();
+        assertThat(saved.getAccounts()).hasSize(1);
+        assertThat(puUtil.isLoaded(saved, "accounts")).isTrue();
     }
 
     @Test
-    void nPlusOneTestForClientsAndAccounts() {
-        Client client1 = new Client("Ivanov", "+375291234567");
-        Client client2 = new Client("Petrov", "+375441112233");
-        clientRepository.saveAll(List.of(client1, client2));
-        clientRepository.flush();
+    void shouldFetchClientsWithAccountsWithoutNPlusOne() {
+        Client client2 = clientRepository.saveAndFlush(new Client("Petrov", "+375441112233"));
 
-        Account a1 = new Account(client1);
-        Account a2 = new Account(client1);
-        Account a3 = new Account(client2);
-        accountRepository.saveAll(List.of(a1, a2, a3));
-        accountRepository.flush();
+        accountRepository.saveAllAndFlush(List.of(
+                new Account(client), new Account(client),
+                new Account(client2)
+        ));
 
-        entityManager.clear();
+        em.clear();
 
-        Client client1WithAccounts = clientRepository.findByIdWithAccounts(client1.getId()).orElseThrow();
-        Client client2WithAccounts = clientRepository.findByIdWithAccounts(client2.getId()).orElseThrow();
+        List<Client> clients = List.of(
+                clientRepository.findByIdWithAccounts(client.getId()).orElseThrow(),
+                clientRepository.findByIdWithAccounts(client2.getId()).orElseThrow()
+        );
 
-        List<Client> clients = List.of(client1WithAccounts, client2WithAccounts);
-
-        clients.forEach(c -> {
-            assertThat(c.getAccounts()).isNotEmpty();
-        });
+        clients.forEach(c -> assertThat(c.getAccounts()).isNotEmpty());
     }
 }

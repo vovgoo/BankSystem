@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @Import(ClientMapper.class)
-class ClientMapperSpringTest {
+class ClientMapperTest {
 
     @Autowired
     private ClientMapper mapper;
