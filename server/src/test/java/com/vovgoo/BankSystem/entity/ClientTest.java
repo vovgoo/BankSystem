@@ -1,10 +1,13 @@
 package com.vovgoo.BankSystem.entity;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
+
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.*;
 
+@ActiveProfiles("test")
 class ClientTest {
 
     @Test

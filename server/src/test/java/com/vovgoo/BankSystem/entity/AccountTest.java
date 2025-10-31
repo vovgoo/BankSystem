@@ -1,11 +1,13 @@
 package com.vovgoo.BankSystem.entity;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.*;
 
+@ActiveProfiles("test")
 class AccountTest {
 
     @Test
