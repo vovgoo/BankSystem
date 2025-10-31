@@ -29,6 +29,7 @@ public class Client {
             message = "Фамилия должна быть одним словом или двойная через тире"
     )
     @Getter
+    @Setter
     private String lastName;
 
     @Column(name = "phone", nullable = false, unique = true)
@@ -38,6 +39,7 @@ public class Client {
             message = "Телефон должен быть в формате +375XXXXXXXXX"
     )
     @Getter
+    @Setter
     private String phone;
 
     @OneToMany(
@@ -46,11 +48,10 @@ public class Client {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+    @Setter
     private List<Account> accounts;
 
     public Client(String lastName, String phone) {
-        if (lastName == null || lastName.isBlank()) throw new IllegalArgumentException("Фамилия обязательна для создания клиента");
-        if (phone == null || phone.isBlank()) throw new IllegalArgumentException("Телефон обязателен для создания клиента");
         this.lastName = lastName;
         this.phone = phone;
         this.accounts = new ArrayList<>();
@@ -58,15 +59,5 @@ public class Client {
 
     public List<Account> getAccounts() {
         return Collections.unmodifiableList(accounts);
-    }
-
-    public void setLastName(String lastName) {
-        if (lastName == null || lastName.isBlank()) throw new IllegalArgumentException("Фамилия обязательна");
-        this.lastName = lastName;
-    }
-
-    public void setPhone(String phone) {
-        if (phone == null || phone.isBlank()) throw new IllegalArgumentException("Телефон обязателен");
-        this.phone = phone;
     }
 }
