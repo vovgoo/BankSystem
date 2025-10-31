@@ -19,16 +19,16 @@ public class StatsRepositoryImpl implements StatsRepository {
     public StatsResponse getOverview() {
         Object[] result = (Object[]) em.createQuery("""
             select
-                count(c),
-                sum(case when size(c.accounts) > 0 then 1 else 0 end),
-                sum(case when size(c.accounts) = 0 then 1 else 0 end),
+                count(distinct c),
+                (select count(distinct c2) from Client c2 join c2.accounts a2),
+                (select count(c3) from Client c3 where size(c3.accounts) = 0),
                 count(a),
                 coalesce(sum(a.balance), 0),
                 coalesce(avg(a.balance), 0),
                 coalesce(max(a.balance), 0),
                 coalesce(min(a.balance), 0)
-            from Client c
-            left join c.accounts a
+          from Client c
+          left join c.accounts a
         """).getSingleResult();
 
         return new StatsResponse(
