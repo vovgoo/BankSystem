@@ -14,12 +14,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@Slf4j
 @Tag(name = "Счёта", description = "Операции по счетам")
 @RestController
 @RequestMapping("/api/v1/accounts")
@@ -72,6 +74,7 @@ public class AccountController {
     )
     @PostMapping
     public ResponseEntity<TransactionResponse> create(@RequestBody @Valid CreateAccountRequest request) {
+        log.info("Создание счёта для клиента: clientId={}", request.clientId());
         return ResponseEntity.status(HttpStatus.CREATED).body(accountService.create(request));
     }
 
@@ -111,6 +114,7 @@ public class AccountController {
     )
     @DeleteMapping("/{id}")
     public ResponseEntity<TransactionResponse> delete(@PathVariable UUID id) {
+        log.info("Удаление счёта: accountId={}", id);
         return ResponseEntity.ok(accountService.delete(id));
     }
 
@@ -158,6 +162,7 @@ public class AccountController {
     )
     @PostMapping("/deposit")
     public ResponseEntity<TransactionResponse> deposit(@RequestBody @Valid DepositAccountRequest request) {
+        log.info("Пополнение счёта: accountId={}, amount={}", request.accountId(), request.amount());
         return ResponseEntity.ok(accountService.deposit(request));
     }
 
@@ -205,6 +210,7 @@ public class AccountController {
     )
     @PostMapping("/withdraw")
     public ResponseEntity<TransactionResponse> withdraw(@RequestBody @Valid WithdrawAccountRequest request) {
+        log.info("Снятие со счёта: accountId={}, amount={}", request.accountId(), request.amount());
         return ResponseEntity.ok(accountService.withdraw(request));
     }
 
@@ -252,6 +258,8 @@ public class AccountController {
     )
     @PostMapping("/transfer")
     public ResponseEntity<TransactionResponse> transfer(@RequestBody @Valid TransferAccountRequest request) {
+        log.info("Перевод между счетами: fromAccountId={}, toAccountId={}, amount={}",
+                request.fromAccountId(), request.toAccountId(), request.amount());
         return ResponseEntity.ok(accountService.transfer(request));
     }
 }

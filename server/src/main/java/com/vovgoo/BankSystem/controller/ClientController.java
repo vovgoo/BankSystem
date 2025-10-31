@@ -1,9 +1,5 @@
 package com.vovgoo.BankSystem.controller;
 
-import com.vovgoo.BankSystem.dto.account.request.CreateAccountRequest;
-import com.vovgoo.BankSystem.dto.account.request.DepositAccountRequest;
-import com.vovgoo.BankSystem.dto.account.request.TransferAccountRequest;
-import com.vovgoo.BankSystem.dto.account.request.WithdrawAccountRequest;
 import com.vovgoo.BankSystem.dto.client.request.CreateClientRequest;
 import com.vovgoo.BankSystem.dto.client.request.SearchClientRequest;
 import com.vovgoo.BankSystem.dto.client.request.UpdateClientRequest;
@@ -12,7 +8,6 @@ import com.vovgoo.BankSystem.dto.client.response.ClientResponse;
 import com.vovgoo.BankSystem.dto.common.PageParams;
 import com.vovgoo.BankSystem.dto.common.PageResponse;
 import com.vovgoo.BankSystem.dto.transaction.TransactionResponse;
-import com.vovgoo.BankSystem.service.AccountService;
 import com.vovgoo.BankSystem.service.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,12 +17,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@Slf4j
 @Tag(name = "Клиенты", description = "Операции по клиентам")
 @RestController
 @RequestMapping("/api/v1/clients")
@@ -66,8 +63,9 @@ public class ClientController {
             }
     )
     @GetMapping("/search")
-    public ResponseEntity<PageResponse<ClientResponse>> search(@Valid SearchClientRequest searchClientRequest,
-                                                               @Valid PageParams pageParams) {
+    public ResponseEntity<PageResponse<ClientResponse>> search(@Valid SearchClientRequest searchClientRequest, @Valid PageParams pageParams) {
+        log.info("Поиск клиентов: lastName={}, page={}, size={}",
+                searchClientRequest.lastName(), pageParams.page(), pageParams.size());
         return ResponseEntity.ok(clientService.search(searchClientRequest, pageParams));
     }
 
@@ -106,6 +104,7 @@ public class ClientController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<ClientDetailsResponse> get(@PathVariable UUID id) {
+        log.info("Получение клиента: id={}", id);
         return ResponseEntity.ok(clientService.get(id));
     }
 
@@ -153,6 +152,8 @@ public class ClientController {
     )
     @PostMapping
     public ResponseEntity<TransactionResponse> create(@RequestBody @Valid CreateClientRequest createClientRequest) {
+        log.info("Создание клиента: lastName={}, phone={}",
+                createClientRequest.lastName(), createClientRequest.phone());
         return ResponseEntity.status(HttpStatus.CREATED).body(clientService.create(createClientRequest));
     }
 
@@ -207,6 +208,8 @@ public class ClientController {
     )
     @PutMapping
     public ResponseEntity<TransactionResponse> update(@RequestBody @Valid UpdateClientRequest updateClientRequest) {
+        log.info("Обновление клиента: id={}, lastName={}, phone={}",
+                updateClientRequest.id(), updateClientRequest.lastName(), updateClientRequest.phone());
         return ResponseEntity.ok(clientService.update(updateClientRequest));
     }
 
@@ -246,6 +249,7 @@ public class ClientController {
     )
     @DeleteMapping("/{id}")
     public ResponseEntity<TransactionResponse> delete(@PathVariable UUID id) {
+        log.info("Удаление клиента: id={}", id);
         return ResponseEntity.ok(clientService.delete(id));
     }
 }

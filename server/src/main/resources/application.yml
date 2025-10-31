@@ -25,3 +25,10 @@ springdoc:
     path: /swagger-ui.html
   api-docs:
     path: /v3/api-docs
+
+logging:
+  level:
+    root: INFO
+    com.vovgoo.BankSystem: DEBUG
+  pattern:
+    console: "[%level] %d{yyyy-MM-dd HH:mm:ss} - %logger{36}.%M - %msg%n"

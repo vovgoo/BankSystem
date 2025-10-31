@@ -16,6 +16,7 @@ import com.vovgoo.BankSystem.repository.ClientRepository;
 import com.vovgoo.BankSystem.service.AccountService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -35,67 +37,80 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public TransactionResponse create(CreateAccountRequest createAccountRequest) {
-        UUID clientId = createAccountRequest.clientId();
+        log.info("Создание счёта: clientId={}", createAccountRequest.clientId());
 
-        Client client = clientRepository.findById(clientId)
+        Client client = clientRepository.findById(createAccountRequest.clientId())
                 .orElseThrow(() -> new EntityNotFoundException("Клиент не найден"));
 
         Account account = new Account(client);
-
         accountRepository.save(account);
 
+        log.info("Счёт успешно создан: accountId={}, clientId={}", account.getId(), client.getId());
         return TransactionResponse.approve("Счёт успешно создан");
     }
 
     @Override
     @Transactional
     public TransactionResponse delete(UUID id) {
+        log.info("Удаление счёта: accountId={}", id);
+
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Счёт не найден"));
 
         if (account.getBalance().compareTo(BigDecimal.ZERO) > 0) {
+            log.warn("Невозможно удалить счёт с ненулевым балансом: accountId={}, balance={}", id, account.getBalance());
             throw new AccountBalanceNotZeroException();
         }
 
         accountRepository.delete(account);
-
+        log.info("Счёт успешно удалён: accountId={}", id);
         return TransactionResponse.approve("Счёт успешно удалён");
     }
 
     @Override
     @Transactional
     public TransactionResponse deposit(DepositAccountRequest depositAccountRequest) {
+        log.info("Пополнение счёта: accountId={}, amount={}", depositAccountRequest.accountId(), depositAccountRequest.amount());
+
         Account account = accountRepository.findById(depositAccountRequest.accountId())
                 .orElseThrow(() -> new EntityNotFoundException("Счёт не найден"));
 
         account.deposit(depositAccountRequest.amount());
-
         accountRepository.save(account);
 
+        log.info("Счёт успешно пополнен: accountId={}, newBalance={}", account.getId(), account.getBalance());
         return TransactionResponse.approve("Счёт успешно пополнен на сумму " + depositAccountRequest.amount());
     }
 
     @Override
     @Transactional
     public TransactionResponse withdraw(WithdrawAccountRequest withdrawAccountRequest) {
+        log.info("Снятие со счёта: accountId={}, amount={}", withdrawAccountRequest.accountId(), withdrawAccountRequest.amount());
+
         Account account = accountRepository.findById(withdrawAccountRequest.accountId())
                 .orElseThrow(() -> new EntityNotFoundException("Счёт не найден"));
 
         if (account.getBalance().compareTo(withdrawAccountRequest.amount()) < 0) {
+            log.warn("Недостаточно средств: accountId={}, balance={}, requested={}",
+                    account.getId(), account.getBalance(), withdrawAccountRequest.amount());
             throw new InsufficientFundsException();
         }
 
         account.withdraw(withdrawAccountRequest.amount());
-
         accountRepository.save(account);
 
+        log.info("Средства успешно сняты: accountId={}, newBalance={}", account.getId(), account.getBalance());
         return TransactionResponse.approve("Со счёта успешно снято " + withdrawAccountRequest.amount());
     }
 
     @Override
     @Transactional
     public TransactionResponse transfer(TransferAccountRequest transferAccountRequest) {
+        log.info("Перевод средств: fromAccountId={}, toAccountId={}, amount={}",
+                transferAccountRequest.fromAccountId(), transferAccountRequest.toAccountId(), transferAccountRequest.amount());
+
         if (transferAccountRequest.fromAccountId().equals(transferAccountRequest.toAccountId())) {
+            log.warn("Попытка перевода на тот же счёт: accountId={}", transferAccountRequest.fromAccountId());
             throw new SameAccountTransferException();
         }
 
@@ -111,6 +126,8 @@ public class AccountServiceImpl implements AccountService {
         BigDecimal total = amount.add(commission);
 
         if (fromAccount.getBalance().compareTo(total) < 0) {
+            log.warn("Недостаточно средств на счёте отправителя: accountId={}, balance={}, required={}",
+                    fromAccount.getId(), fromAccount.getBalance(), total);
             throw new InsufficientFundsException();
         }
 
@@ -119,6 +136,9 @@ public class AccountServiceImpl implements AccountService {
 
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);
+
+        log.info("Перевод выполнен: fromAccountId={}, toAccountId={}, amount={}, commission={}",
+                fromAccount.getId(), toAccount.getId(), amount, commission);
 
         return TransactionResponse.approve(
                 String.format("Перевод %.2f выполнен успешно. Комиссия составила %.2f", amount, commission)
