@@ -32,6 +32,9 @@ public class Account {
     @DecimalMin(value = "0.00", message = "Баланс не может быть отрицательным")
     private BigDecimal balance;
 
+    @Version
+    private Long version;
+
     public Account(Client client) {
         if (client == null) throw new IllegalArgumentException("Клиент обязателен для открытия счета");
         this.client = client;

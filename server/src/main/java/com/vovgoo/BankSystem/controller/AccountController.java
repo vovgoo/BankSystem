@@ -151,6 +151,13 @@ public class AccountController {
                                     examples = @ExampleObject(value = "{ \"status\": \"DECLINED\", \"message\": \"Счёт не найден\", \"timestamp\": \"2025-11-01T12:36:02\" }")
                             )
                     ),
+                    @ApiResponse(responseCode = "409", description = "Конфликт при параллельной операции (Optimistic Lock)",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = TransactionResponse.class),
+                                    examples = @ExampleObject(value = "{ \"status\": \"DECLINED\", \"message\": \"Конфликт при параллельной операции. Попробуйте повторить действие.\", \"timestamp\": \"2025-11-01T12:36:05\" }")
+                            )
+                    ),
                     @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервиса",
                             content = @Content(
                                     mediaType = "application/json",
@@ -199,6 +206,13 @@ public class AccountController {
                                     examples = @ExampleObject(value = "{ \"status\": \"DECLINED\", \"message\": \"Счёт не найден\", \"timestamp\": \"2025-11-01T12:37:02\" }")
                             )
                     ),
+                    @ApiResponse(responseCode = "409", description = "Конфликт при параллельной операции (Optimistic Lock)",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = TransactionResponse.class),
+                                    examples = @ExampleObject(value = "{ \"status\": \"DECLINED\", \"message\": \"Конфликт при параллельной операции. Попробуйте повторить действие.\", \"timestamp\": \"2025-11-01T12:36:05\" }")
+                            )
+                    ),
                     @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервиса",
                             content = @Content(
                                     mediaType = "application/json",
@@ -245,6 +259,13 @@ public class AccountController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = TransactionResponse.class),
                                     examples = @ExampleObject(value = "{ \"status\": \"DECLINED\", \"message\": \"Один из счетов не найден\", \"timestamp\": \"2025-11-01T12:38:02\" }")
+                            )
+                    ),
+                    @ApiResponse(responseCode = "409", description = "Конфликт при параллельной операции (Optimistic Lock)",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = TransactionResponse.class),
+                                    examples = @ExampleObject(value = "{ \"status\": \"DECLINED\", \"message\": \"Конфликт при параллельной операции. Попробуйте повторить действие.\", \"timestamp\": \"2025-11-01T12:36:05\" }")
                             )
                     ),
                     @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервиса",

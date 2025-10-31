@@ -7,6 +7,7 @@ import com.vovgoo.BankSystem.exception.account.SameAccountTransferException;
 import com.vovgoo.BankSystem.exception.client.ClientAlreadyExistsException;
 import com.vovgoo.BankSystem.exception.client.ClientHasActiveAccountsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.OptimisticLockException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -94,6 +95,16 @@ public class GlobalExceptionHandler {
         TransactionResponse resp = TransactionResponse.decline(errors.toString());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(resp);
+    }
+
+    @ExceptionHandler(OptimisticLockException.class)
+    public ResponseEntity<TransactionResponse> handleOptimisticLock(OptimisticLockException ex) {
+        TransactionResponse resp = TransactionResponse.decline(
+                "Конфликт при параллельной операции. Попробуйте повторить действие."
+        );
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
                 .body(resp);
     }
 }
