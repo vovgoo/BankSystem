@@ -8,6 +8,7 @@ import com.vovgoo.BankSystem.dto.client.response.ClientResponse;
 import com.vovgoo.BankSystem.dto.common.PageParams;
 import com.vovgoo.BankSystem.dto.common.PageResponse;
 import com.vovgoo.BankSystem.dto.transaction.TransactionResponse;
+import com.vovgoo.BankSystem.entity.Account;
 import com.vovgoo.BankSystem.entity.Client;
 import com.vovgoo.BankSystem.exception.client.ClientAlreadyExistsException;
 import com.vovgoo.BankSystem.exception.client.ClientHasActiveAccountsException;
@@ -49,13 +50,17 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ClientDetailsResponse get(UUID id) {
+    public ClientDetailsResponse get(UUID id, PageParams pageParams) {
         log.info("Получение клиента по ID={}", id);
-        Client client = clientRepository.findByIdWithAccounts(id)
+
+        Pageable pageable = PageRequest.of(pageParams.page(), pageParams.size());
+        Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Клиент не найден"));
 
+        Page<Account> accounts = accountRepository.findAccountsByClientId(id, pageable);
+
         log.info("Клиент успешно найден: id={}", id);
-        return clientMapper.toClientDetailsResponse(client);
+        return clientMapper.toClientDetailsResponse(client, accounts);
     }
 
     @Override
