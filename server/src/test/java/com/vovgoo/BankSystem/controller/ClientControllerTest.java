@@ -1,6 +1,7 @@
 package com.vovgoo.BankSystem.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vovgoo.BankSystem.dto.account.response.AccountSummaryResponse;
 import com.vovgoo.BankSystem.dto.client.request.CreateClientRequest;
 import com.vovgoo.BankSystem.dto.client.request.UpdateClientRequest;
 import com.vovgoo.BankSystem.entity.Account;
@@ -129,19 +130,36 @@ class ClientControllerTest {
     class GetClientTests {
 
         @Test
-        @DisplayName("Успешное получение клиента по ID")
+        @DisplayName("Успешное получение клиента по ID с пагинацией аккаунтов")
         void getClient_Success() throws Exception {
-            mockMvc.perform(get("/api/v1/clients/{id}", client.getId()))
+            mockMvc.perform(get("/api/v1/clients/{id}", client.getId())
+                            .param("page", "0")
+                            .param("size", "10"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id").value(client.getId().toString()))
-                    .andExpect(jsonPath("$.lastName").value("Ivanov"))
-                    .andExpect(jsonPath("$.phone").value("+375291234567"));
+                    .andExpect(jsonPath("$.lastName").value(client.getLastName()))
+                    .andExpect(jsonPath("$.phone").value(client.getPhone()))
+                    .andExpect(jsonPath("$.accounts").isNotEmpty())
+                    .andExpect(jsonPath("$.accounts.content").isArray())
+                    .andExpect(jsonPath("$.accounts.pageNumber").value(0))
+                    .andExpect(jsonPath("$.accounts.pageSize").value(10));
+
+            if (!client.getAccounts().isEmpty()) {
+                Account firstAccount = client.getAccounts().get(0);
+                mockMvc.perform(get("/api/v1/clients/{id}", client.getId())
+                                .param("page", "0")
+                                .param("size", "10"))
+                        .andExpect(jsonPath("$.accounts.content[0].id").value(firstAccount.getId().toString()))
+                        .andExpect(jsonPath("$.accounts.content[0].balance").value(firstAccount.getBalance()));
+            }
         }
 
         @Test
         @DisplayName("Получение клиента — клиент не найден")
         void getClient_NotFound() throws Exception {
-            mockMvc.perform(get("/api/v1/clients/{id}", UUID.randomUUID()))
+            mockMvc.perform(get("/api/v1/clients/{id}", UUID.randomUUID())
+                            .param("page", "0")
+                            .param("size", "10"))
                     .andExpect(status().isNotFound())
                     .andExpect(jsonPath("$.status").value("DECLINED"));
         }

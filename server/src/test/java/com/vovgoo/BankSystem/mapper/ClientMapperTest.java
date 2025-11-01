@@ -5,14 +5,13 @@ import com.vovgoo.BankSystem.dto.client.response.ClientDetailsResponse;
 import com.vovgoo.BankSystem.dto.client.response.ClientResponse;
 import com.vovgoo.BankSystem.entity.Account;
 import com.vovgoo.BankSystem.entity.Client;
-import com.vovgoo.BankSystem.repository.AccountRepository;
-import com.vovgoo.BankSystem.repository.ClientRepository;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,9 +28,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ClientMapperTest {
 
     @Autowired private ClientMapper mapper;
-    @Autowired private ClientRepository clientRepository;
-    @Autowired private AccountRepository accountRepository;
-    @Autowired private EntityManager entityManager;
 
     @Nested
     @DisplayName("toClientDetailsResponse")
@@ -40,47 +36,55 @@ class ClientMapperTest {
         @Test
         @DisplayName("Возвращает null, если клиент null")
         void shouldReturnNull_whenClientIsNull() {
-            ClientDetailsResponse result = mapper.toClientDetailsResponse(null);
+            ClientDetailsResponse result = mapper.toClientDetailsResponse(null, Page.empty());
             assertThat(result).isNull();
         }
 
         @Test
-        @DisplayName("Возвращает пустой список счетов, если у клиента нет аккаунтов")
-        void shouldReturnEmptyAccounts_whenClientHasNoAccounts() {
+        @DisplayName("Возвращает пустой список счетов, если accounts null")
+        void shouldReturnEmptyAccounts_whenAccountsIsNull() {
             Client client = new Client("Ivanov", "+375291234567");
-            clientRepository.saveAndFlush(client);
-            entityManager.clear();
+            ClientDetailsResponse result = mapper.toClientDetailsResponse(client, null);
 
-            Client clientFromDb = clientRepository.findById(client.getId()).orElseThrow();
-            ClientDetailsResponse result = mapper.toClientDetailsResponse(clientFromDb);
+            assertThat(result).isNotNull();
+            assertThat(result.accounts()).isNotNull();
+            assertThat(result.accounts().getContent()).isEmpty();
+        }
 
-            assertThat(result.accounts()).isEmpty();
+        @Test
+        @DisplayName("Возвращает пустой список счетов, если accounts пустая страница")
+        void shouldReturnEmptyAccounts_whenAccountsIsEmpty() {
+            Client client = new Client("Ivanov", "+375291234567");
+            ClientDetailsResponse result = mapper.toClientDetailsResponse(client, Page.empty());
+
+            assertThat(result.accounts()).isNotNull();
+            assertThat(result.accounts().getContent()).isEmpty();
         }
 
         @Test
         @DisplayName("Корректно отображает аккаунты с балансами и id")
         void shouldMapAccountsCorrectly() {
             Client client = new Client("Ivanov", "+375291234567");
-            clientRepository.saveAndFlush(client);
 
             Account a1 = new Account(client); a1.deposit(BigDecimal.valueOf(100));
             Account a2 = new Account(client); a2.deposit(BigDecimal.valueOf(200));
-            accountRepository.saveAll(List.of(a1, a2));
-            accountRepository.flush();
-            entityManager.clear();
+            Page<Account> accountsPage = new PageImpl<>(List.of(a1, a2));
 
-            Client clientFromDb = clientRepository.findById(client.getId()).orElseThrow();
-            ClientDetailsResponse result = mapper.toClientDetailsResponse(clientFromDb);
+            ClientDetailsResponse result = mapper.toClientDetailsResponse(client, accountsPage);
 
-            assertThat(result.accounts()).hasSize(2);
-            List<BigDecimal> balances = result.accounts().stream()
-                    .map(AccountSummaryResponse::balance).toList();
+            assertThat(result.accounts()).isNotNull();
+            assertThat(result.accounts().getContent()).hasSize(2);
+
+            List<BigDecimal> balances = result.accounts().getContent().stream()
+                    .map(AccountSummaryResponse::balance)
+                    .toList();
             assertThat(balances)
                     .usingElementComparator(BigDecimal::compareTo)
                     .containsExactlyInAnyOrder(BigDecimal.valueOf(100), BigDecimal.valueOf(200));
 
-            List<UUID> ids = result.accounts().stream()
-                    .map(AccountSummaryResponse::id).toList();
+            List<UUID> ids = result.accounts().getContent().stream()
+                    .map(AccountSummaryResponse::id)
+                    .toList();
             assertThat(ids).containsExactlyInAnyOrder(a1.getId(), a2.getId());
         }
 
@@ -88,30 +92,17 @@ class ClientMapperTest {
         @DisplayName("Корректно обрабатывает несколько аккаунтов с одинаковым балансом")
         void shouldHandleMultipleAccounts_withSameBalance() {
             Client client = new Client("Sidorov", "+375291112233");
-            clientRepository.saveAndFlush(client);
 
             Account a1 = new Account(client); a1.deposit(BigDecimal.valueOf(100));
             Account a2 = new Account(client); a2.deposit(BigDecimal.valueOf(100));
-            accountRepository.saveAll(List.of(a1, a2));
-            accountRepository.flush();
-            entityManager.clear();
+            Page<Account> accountsPage = new PageImpl<>(List.of(a1, a2));
 
-            Client clientFromDb = clientRepository.findById(client.getId()).orElseThrow();
-            ClientDetailsResponse result = mapper.toClientDetailsResponse(clientFromDb);
+            ClientDetailsResponse result = mapper.toClientDetailsResponse(client, accountsPage);
 
-            assertThat(result.accounts()).hasSize(2);
-            result.accounts().forEach(acc -> assertThat(acc.balance()).isEqualByComparingTo(BigDecimal.valueOf(100)));
-        }
-
-        @Test
-        @DisplayName("Возвращает пустой список, если getAccounts() возвращает null")
-        void shouldReturnEmptyList_whenAccountsCollectionIsNull() {
-            Client client = new Client("Nullov", "+375298765432") {
-                @Override
-                public List<Account> getAccounts() { return null; }
-            };
-            ClientDetailsResponse result = mapper.toClientDetailsResponse(client);
-            assertThat(result.accounts()).isEmpty();
+            assertThat(result.accounts()).isNotNull();
+            assertThat(result.accounts().getContent()).hasSize(2);
+            result.accounts().getContent()
+                    .forEach(acc -> assertThat(acc.balance()).isEqualByComparingTo(BigDecimal.valueOf(100)));
         }
     }
 
