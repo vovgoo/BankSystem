@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public interface ClientService {
     PageResponse<ClientResponse> search(SearchClientRequest searchClientRequest, PageParams pageParams);
-    ClientDetailsResponse get(UUID id);
+    ClientDetailsResponse get(UUID id, PageParams pageParams);
     TransactionResponse create(CreateClientRequest createClientRequest);
     TransactionResponse update(UpdateClientRequest updateClientRequest);
     TransactionResponse delete(UUID id);

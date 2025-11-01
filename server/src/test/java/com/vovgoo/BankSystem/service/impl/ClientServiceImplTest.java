@@ -22,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -142,16 +143,25 @@ class ClientServiceImplTest {
         @Test
         @DisplayName("Успешное получение информации о клиенте")
         void shouldReturnClientDetails() {
-            ClientDetailsResponse details = clientService.get(client.getId());
+            PageParams pageParams = new PageParams(0, 10);
+
+            ClientDetailsResponse details = clientService.get(client.getId(), pageParams);
+
             assertThat(details.id()).isEqualTo(client.getId());
             assertThat(details.lastName()).isEqualTo(client.getLastName());
             assertThat(details.phone()).isEqualTo(client.getPhone());
+
+            assertThat(details.accounts()).isNotNull();
+            assertThat(details.accounts().getContent()).isInstanceOf(List.class);
+            assertThat(details.accounts().getContent().size()).isLessThanOrEqualTo(pageParams.size());
         }
 
         @Test
         @DisplayName("Попытка получения данных несуществующего клиента")
         void shouldThrow_WhenClientNotFound() {
-            assertThatThrownBy(() -> clientService.get(UUID.randomUUID()))
+            PageParams pageParams = new PageParams(0, 10);
+
+            assertThatThrownBy(() -> clientService.get(UUID.randomUUID(), pageParams))
                     .isInstanceOf(EntityNotFoundException.class)
                     .hasMessageContaining("Клиент не найден");
         }

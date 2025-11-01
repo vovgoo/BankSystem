@@ -73,12 +73,14 @@ public class ClientController {
             summary = "Получить клиента",
             description = "Возвращает детальную информацию о клиенте по ID",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Детали клиента",
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Детали клиента с постраничным списком аккаунтов",
                             content = @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = ClientDetailsResponse.class),
                                     examples = @ExampleObject(
-                                            value = "{ \"id\": \"123e4567-e89b-12d3-a456-426614174000\", \"lastName\": \"Иванов\", \"phone\": \"+375291234567\", \"accounts\": [ { \"id\": \"123e4567-e89b-12d3-a456-426614174001\", \"balance\": 1500.00 } ] }"
+                                            value = "{ \"id\": \"123e4567-e89b-12d3-a456-426614174000\", \"lastName\": \"Иванов\", \"phone\": \"+375291234567\", \"accounts\": { \"content\": [ { \"id\": \"123e4567-e89b-12d3-a456-426614174001\", \"balance\": 1500.00 }, { \"id\": \"123e4567-e89b-12d3-a456-426614174002\", \"balance\": 980.50 } ], \"pageNumber\": 0, \"pageSize\": 10, \"totalElements\": 25, \"totalPages\": 3 } }"
                                     )
                             )
                     ),
@@ -103,9 +105,9 @@ public class ClientController {
             }
     )
     @GetMapping("/{id}")
-    public ResponseEntity<ClientDetailsResponse> get(@PathVariable UUID id) {
+    public ResponseEntity<ClientDetailsResponse> get(@PathVariable UUID id, @Valid PageParams pageParams) {
         log.info("Получение клиента: id={}", id);
-        return ResponseEntity.ok(clientService.get(id));
+        return ResponseEntity.ok(clientService.get(id, pageParams));
     }
 
     @Operation(
