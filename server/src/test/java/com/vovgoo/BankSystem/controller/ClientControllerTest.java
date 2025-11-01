@@ -183,12 +183,24 @@ class ClientControllerTest {
     class SearchClientsTests {
 
         @Test
-        @DisplayName("Поиск без фильтров — успешный ответ")
+        @DisplayName("Поиск без фильтров — ошибка валидации")
         void searchClients_All() throws Exception {
             mockMvc.perform(get("/api/v1/clients/search")
                             .param("page", "0")
                             .param("size", "10"))
                     .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.status").value("DECLINED"))
+                    .andExpect(jsonPath("$.message").value("lastName: Фамилия не должна быть null; "));
+        }
+
+        @Test
+        @DisplayName("Поиск с пустой фамилией — успешный ответ")
+        void searchClients_EmptyLastName() throws Exception {
+            mockMvc.perform(get("/api/v1/clients/search")
+                            .param("lastName", "")
+                            .param("page", "0")
+                            .param("size", "10"))
+                    .andExpect(status().isOk())
                     .andExpect(jsonPath("$.content").isArray());
         }
 

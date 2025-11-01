@@ -236,7 +236,7 @@ class AccountServiceImplTest {
 
             assertThatThrownBy(() -> accountService.transfer(request))
                     .isInstanceOf(EntityNotFoundException.class)
-                    .hasMessageContaining("Счёт отправителя не найден");
+                    .hasMessageContaining("Один из счетов не найден");
         }
 
         @Test
@@ -247,7 +247,7 @@ class AccountServiceImplTest {
 
             assertThatThrownBy(() -> accountService.transfer(request))
                     .isInstanceOf(EntityNotFoundException.class)
-                    .hasMessageContaining("Счёт получателя не найден");
+                    .hasMessageContaining("Один из счетов не найден");
         }
 
         @Test
