@@ -1,7 +1,19 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@components/index": ["./src/components/index"],
+      "@components/*": ["./src/components/*"],
+      "@api": ["./src/api/index"],
+      "@api/*": ["./src/api/*"],
+      "@schemas/": ["./src/schemas/index"],
+      "@schemas/*": ["./src/schemas/*"],
+      "@pages": ["./src/pages/index"],
+      "@pages/*": ["./src/pages/*"],
+      "@utils": ["./src/utils/index"],
+      "@utils/*": ["./src/utils/*"]
+    }
+  },
+  "include": ["src"]
 }
