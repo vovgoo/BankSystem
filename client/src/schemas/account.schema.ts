@@ -28,3 +28,8 @@ export const transferSchema = z.object({
     .min(0.01, "Сумма перевода должна быть больше 0")
     .refine(val => /^\d+(\.\d{1,2})?$/.test(val.toString()), "Сумма должна иметь не более 2 цифр после запятой"),
 });
+
+export type CreateAccountFormData = z.infer<typeof createAccountSchema>;
+export type DepositFormData = z.infer<typeof depositSchema>;
+export type WithdrawFormData = z.infer<typeof withdrawSchema>;
+export type TransferFormData = z.infer<typeof transferSchema>;
