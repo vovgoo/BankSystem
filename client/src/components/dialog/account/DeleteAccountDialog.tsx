@@ -1,21 +1,18 @@
 import { useState } from "react";
 import { Box, Button, Text } from "@chakra-ui/react";
-
-import type { UUID } from "@api";
-import { clientsService } from "@api";
-
 import { BaseDialog } from "../base";
-import { notifyTransaction } from "@utils";
+import { accountsService, UUID } from "@api";
+import { notifyTransaction } from "@/utils";
 
-type DeleteClientDialogProps = {
-  clientId: UUID;
+type DeleteAccountDialogProps = {
+  accountId: UUID;
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
 };
 
-export const DeleteClientDialog: React.FC<DeleteClientDialogProps> = ({
-  clientId,
+export const DeleteAccountDialog: React.FC<DeleteAccountDialogProps> = ({
+  accountId,
   isOpen,
   onClose,
   onSuccess,
@@ -25,14 +22,14 @@ export const DeleteClientDialog: React.FC<DeleteClientDialogProps> = ({
   const handleDelete = async () => {
     setIsLoading(true);
     try {
-      await clientsService.delete(clientId);
+      await accountsService.delete(accountId);
       notifyTransaction();
       onSuccess?.();
-      onClose();
     } catch (error) {
       notifyTransaction(error);
     } finally {
       setIsLoading(false);
+      onClose();
     }
   };
 
@@ -40,19 +37,16 @@ export const DeleteClientDialog: React.FC<DeleteClientDialogProps> = ({
     <BaseDialog
       isOpen={isOpen}
       onClose={onClose}
-      title="Точно хотите удалить?"
+      title="Закрытие счета"
       body={
         <Text color="gray.400">
-          Вы собираетесь удалить клиента <strong className="text-white">{clientId}</strong>. Это действие нельзя будет отменить.
+          Вы собираетесь закрыть счет <strong className="text-white">{accountId}</strong>. Это действие нельзя будет отменить.
         </Text>
       }
       footer={
         <Box display="flex" justifyContent="flex-end" gap={2}>
           <Button colorScheme="red" loading={isLoading} onClick={handleDelete}>
-            Удалить
-          </Button>
-          <Button onClick={onClose} variant="outline">
-            Отмена
+            Закрыть счет
           </Button>
         </Box>
       }

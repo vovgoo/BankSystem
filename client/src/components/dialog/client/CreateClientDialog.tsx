@@ -11,18 +11,28 @@ import { createClientSchema } from "@schemas";
 import type { CreateClientFormData } from "@schemas";
 
 import { clientsService } from "@api";
-
 import { notifyTransaction } from "@utils";
 
 type CreateClientDialogProps = {
+  isOpen: boolean;
+  onClose: () => void;
   onSuccess?: () => void;
 };
 
-export const CreateClientDialog: React.FC<CreateClientDialogProps> = ({ onSuccess }) => {
-  const [isOpen, setIsOpen] = useState(false);
+export const CreateClientDialog: React.FC<CreateClientDialogProps> = ({
+  isOpen,
+  onClose,
+  onSuccess,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const { handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<CreateClientFormData>({
+  const {
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<CreateClientFormData>({
     resolver: zodResolver(createClientSchema),
     defaultValues: { lastName: "", phone: "+375 " },
   });
@@ -34,7 +44,7 @@ export const CreateClientDialog: React.FC<CreateClientDialogProps> = ({ onSucces
       notifyTransaction();
       reset();
       onSuccess?.();
-      setIsOpen(false);
+      onClose();
     } catch (error) {
       notifyTransaction(error);
     } finally {
@@ -43,51 +53,45 @@ export const CreateClientDialog: React.FC<CreateClientDialogProps> = ({ onSucces
   };
 
   return (
-    <>
-      <Button colorScheme="teal" onClick={() => setIsOpen(true)}>
-        Создать клиента
-      </Button>
-
-      <BaseDialog
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        title="Создать клиента"
-        body={
-          <Box>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Box mb={4}>
-                <TextInput
-                  label="Фамилия"
-                  value={watch("lastName")}
-                  onChange={(val) => setValue("lastName", val)}
-                  error={errors.lastName?.message}
-                  placeholder="Иванов"
-                />
-              </Box>
-              <Box mb={4}>
-                <PhoneInput
-                  label="Телефон"
-                  value={watch("phone")}
-                  onChange={(value) => setValue("phone", value)}
-                  error={errors.phone?.message}
-                />
-              </Box>
-            </form>
-          </Box>
-        }
-        footer={
-          <Box display="flex" justifyContent="center" gap={2}>
-            <Button
-              type="submit"
-              colorScheme="teal"
-              loading={isLoading}
-              onClick={handleSubmit(onSubmit)}
-            >
-              Сохранить
-            </Button>
-          </Box>
-        }
-      />
-    </>
+    <BaseDialog
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Создать клиента"
+      body={
+        <Box>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Box mb={4}>
+              <TextInput
+                label="Фамилия"
+                value={watch("lastName")}
+                onChange={(val) => setValue("lastName", val)}
+                error={errors.lastName?.message}
+                placeholder="Иванов"
+              />
+            </Box>
+            <Box mb={4}>
+              <PhoneInput
+                label="Телефон"
+                value={watch("phone")}
+                onChange={(val) => setValue("phone", val)}
+                error={errors.phone?.message}
+              />
+            </Box>
+          </form>
+        </Box>
+      }
+      footer={
+        <Box display="flex" justifyContent="center" gap={2}>
+          <Button
+            type="submit"
+            colorScheme="teal"
+            loading={isLoading}
+            onClick={handleSubmit(onSubmit)}
+          >
+            Сохранить
+          </Button>
+        </Box>
+      }
+    />
   );
-}
+};

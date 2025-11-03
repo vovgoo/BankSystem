@@ -1,20 +1,18 @@
 import { useState } from "react";
 import { Box, Button, Text } from "@chakra-ui/react";
-
-import type { UUID } from "@api";
-import { clientsService } from "@api";
-
 import { BaseDialog } from "../base";
+import { accountsService } from "@api";
 import { notifyTransaction } from "@utils";
+import type { UUID } from "@api";
 
-type DeleteClientDialogProps = {
+type CreateAccountDialogProps = {
   clientId: UUID;
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
 };
 
-export const DeleteClientDialog: React.FC<DeleteClientDialogProps> = ({
+export const CreateAccountDialog: React.FC<CreateAccountDialogProps> = ({
   clientId,
   isOpen,
   onClose,
@@ -22,17 +20,17 @@ export const DeleteClientDialog: React.FC<DeleteClientDialogProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleDelete = async () => {
+  const handleCreate = async () => {
     setIsLoading(true);
     try {
-      await clientsService.delete(clientId);
+      await accountsService.create({ clientId });
       notifyTransaction();
       onSuccess?.();
-      onClose();
     } catch (error) {
       notifyTransaction(error);
     } finally {
       setIsLoading(false);
+      onClose();
     }
   };
 
@@ -40,19 +38,18 @@ export const DeleteClientDialog: React.FC<DeleteClientDialogProps> = ({
     <BaseDialog
       isOpen={isOpen}
       onClose={onClose}
-      title="Точно хотите удалить?"
+      title="Открыть счет"
       body={
-        <Text color="gray.400">
-          Вы собираетесь удалить клиента <strong className="text-white">{clientId}</strong>. Это действие нельзя будет отменить.
-        </Text>
+        <Box>
+          <Text mb={4}>
+            Вы собираетесь открыть новый счет для клиента <strong className="text-white">{clientId}</strong>.
+          </Text>
+        </Box>
       }
       footer={
         <Box display="flex" justifyContent="flex-end" gap={2}>
-          <Button colorScheme="red" loading={isLoading} onClick={handleDelete}>
-            Удалить
-          </Button>
-          <Button onClick={onClose} variant="outline">
-            Отмена
+          <Button colorScheme="teal" loading={isLoading} onClick={handleCreate}>
+            Открыть
           </Button>
         </Box>
       }

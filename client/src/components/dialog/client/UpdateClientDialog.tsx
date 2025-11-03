@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { Button, Box } from "@chakra-ui/react";
 
 import { useForm } from "react-hook-form";
@@ -18,13 +17,19 @@ import { notifyTransaction } from "@utils";
 
 type UpdateClientDialogProps = {
   clientId: UUID;
+  isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
 };
 
-export const UpdateClientDialog: React.FC<UpdateClientDialogProps> = ({ clientId, onClose, onSuccess }) => {
+export const UpdateClientDialog: React.FC<UpdateClientDialogProps> = ({
+  clientId,
+  isOpen,
+  onClose,
+  onSuccess,
+}) => {
   const [loading, setLoading] = useState(true);
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
 
   const { handleSubmit, reset, setValue, formState: { errors }, watch } = useForm<UpdateClientFormData>({
     resolver: zodResolver(updateClientSchema),
@@ -49,28 +54,27 @@ export const UpdateClientDialog: React.FC<UpdateClientDialogProps> = ({ clientId
 
   const onSubmit = async (data: UpdateClientFormData) => {
     setIsLoading(true);
-
     try {
       await clientsService.update(data);
       notifyTransaction();
       onSuccess?.();
+      onClose();
     } catch (error) {
       notifyTransaction(error);
     } finally {
       setIsLoading(false);
-      onClose();
     }
   };
 
   return (
     <BaseDialog
-      isOpen={true}
+      isOpen={isOpen}
       onClose={onClose}
-      title={`Обновление клиента`}
+      title="Обновление клиента"
       body={
         <Box>
           {loading ? (
-            <CenteredSpinner/>
+            <CenteredSpinner />
           ) : (
             <form onSubmit={handleSubmit(onSubmit)}>
               <Box mb={4}>
@@ -82,7 +86,6 @@ export const UpdateClientDialog: React.FC<UpdateClientDialogProps> = ({ clientId
                   placeholder="Иванов"
                 />
               </Box>
-
               <Box mb={4}>
                 <PhoneInput
                   label="Телефон"
@@ -104,4 +107,4 @@ export const UpdateClientDialog: React.FC<UpdateClientDialogProps> = ({ clientId
       }
     />
   );
-}
+};
