@@ -5,6 +5,7 @@ export * from "./spinner"
 export * from "./input"
 export * from "./table"
 export * from "./clients"
+export * from "./dialogButton"
 
 export { Provider } from "./ui/provider"
 export { Toaster, toaster } from "./ui/toaster"
