@@ -42,7 +42,7 @@ export const Clients: React.FC = () => {
         onCreateSuccess={() => fetchData(search)}
       />
       
-      {isLoading ? (
+      {isLoading || !data ? (
         <ClientsLoader />
       ) : data?.content && data.content.length > 0 ? (
         <ClientsTable
