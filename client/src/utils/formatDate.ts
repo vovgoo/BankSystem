@@ -1,9 +1,13 @@
 export const formatDate = (timestamp: string) => {
-    return new Intl.DateTimeFormat("ru-RU", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-    }).format(new Date(timestamp));
+  const date = new Date(timestamp);
+  const offsetMinutes = -date.getTimezoneOffset();
+  const localDate = new Date(date.getTime() + offsetMinutes * 60 * 1000);
+
+  return localDate.toLocaleString("ru-RU", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 };
