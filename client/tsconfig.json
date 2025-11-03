@@ -7,7 +7,7 @@
       "@components/*": ["./src/components/*"],
       "@api": ["./src/api/index"],
       "@api/*": ["./src/api/*"],
-      "@schemas/": ["./src/schemas/index"],
+      "@schemas": ["./src/schemas/index"],
       "@schemas/*": ["./src/schemas/*"],
       "@pages": ["./src/pages/index"],
       "@pages/*": ["./src/pages/*"],
