@@ -1,5 +1,5 @@
 export const AppRoutes = {
   DASHBOARD: '/',
-  USERS: '/users',
-  USER_DETAIL: '/users/:id',
+  CLIENTS: '/clients',
+  CLIENT_DETAILS: '/client/:id',
 } as const;

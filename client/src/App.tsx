@@ -1,20 +1,21 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Dashboard, Users, UserDetails } from '@pages';
+import { Dashboard, Clients, ClientDetails } from '@pages';
 import { Header } from '@components';
 import { AppRoutes } from './routes';
+import { Box } from '@chakra-ui/react';
 
 function App() {
   return (
-    <div className='bg-[#040404] min-h-dvh w-full' >
+    <Box minH="100vh" display="flex" flexDirection="column" bg="#040404">
       <BrowserRouter>
         <Header />
-        <Routes>
-          <Route path={AppRoutes.DASHBOARD} element={<Dashboard />} />
-          <Route path={AppRoutes.USERS} element={<Users />} />
-          <Route path={AppRoutes.USER_DETAIL} element={<UserDetails />} />
-        </Routes>
+          <Routes>
+            <Route path={AppRoutes.DASHBOARD} element={<Dashboard />} />
+            <Route path={AppRoutes.CLIENTS} element={<Clients />} />
+            <Route path={AppRoutes.CLIENT_DETAILS} element={<ClientDetails />} />
+          </Routes>
       </BrowserRouter>
-    </div>
+    </Box>
   );
 }
 
