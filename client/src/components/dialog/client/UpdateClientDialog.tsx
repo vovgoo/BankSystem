@@ -19,9 +19,10 @@ import { notifyTransaction } from "@utils";
 type UpdateClientDialogProps = {
   clientId: UUID;
   onClose: () => void;
+  onSuccess?: () => void;
 };
 
-export const UpdateClientDialog: React.FC<UpdateClientDialogProps> = ({ clientId, onClose }) => {
+export const UpdateClientDialog: React.FC<UpdateClientDialogProps> = ({ clientId, onClose, onSuccess }) => {
   const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false); 
 
@@ -52,6 +53,7 @@ export const UpdateClientDialog: React.FC<UpdateClientDialogProps> = ({ clientId
     try {
       await clientsService.update(data);
       notifyTransaction();
+      onSuccess?.();
     } catch (error) {
       notifyTransaction(error);
     } finally {

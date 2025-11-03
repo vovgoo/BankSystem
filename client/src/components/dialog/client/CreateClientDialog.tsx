@@ -14,8 +14,12 @@ import { clientsService } from "@api";
 
 import { notifyTransaction } from "@utils";
 
-export const CreateClientDialog: React.FC = () => {
-    const [isOpen, setIsOpen] = useState(false);
+type CreateClientDialogProps = {
+  onSuccess?: () => void;
+};
+
+export const CreateClientDialog: React.FC<CreateClientDialogProps> = ({ onSuccess }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const { handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<CreateClientFormData>({
@@ -29,6 +33,7 @@ export const CreateClientDialog: React.FC = () => {
       await clientsService.create(data);
       notifyTransaction();
       reset();
+      onSuccess?.();
       setIsOpen(false);
     } catch (error) {
       notifyTransaction(error);

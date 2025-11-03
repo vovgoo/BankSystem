@@ -10,9 +10,10 @@ import { notifyTransaction } from "@utils";
 type DeleteClientDialogProps = {
   clientId: UUID;
   onClose: () => void;
+  onSuccess?: () => void;
 };
 
-export const DeleteClientDialog: React.FC<DeleteClientDialogProps> = ({ clientId, onClose }) => {
+export const DeleteClientDialog: React.FC<DeleteClientDialogProps> = ({ clientId, onClose, onSuccess }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
@@ -21,6 +22,7 @@ export const DeleteClientDialog: React.FC<DeleteClientDialogProps> = ({ clientId
     try {
       await clientsService.delete(clientId);
       notifyTransaction();
+      onSuccess?.();
     } catch (error) {
       notifyTransaction(error);
     } finally {

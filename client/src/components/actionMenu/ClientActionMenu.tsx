@@ -7,6 +7,7 @@ import { BaseMenu } from "./BaseMenu";
 
 type ClientActionsMenuProps = {
   clientId: string;
+  onSuccess?: () => void;
 };
 
 export const ClientDialogType = {
@@ -16,7 +17,7 @@ export const ClientDialogType = {
 
 type ClientDialogType = (typeof ClientDialogType)[keyof typeof ClientDialogType];
 
-export const ClientActionMenu: React.FC<ClientActionsMenuProps> = ({ clientId }) => {
+export const ClientActionMenu: React.FC<ClientActionsMenuProps> = ({ clientId, onSuccess }) => {
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState<ClientDialogType | null>(null);
 
@@ -39,10 +40,10 @@ export const ClientActionMenu: React.FC<ClientActionsMenuProps> = ({ clientId })
       <BaseMenu items={menuItems} triggerIcon={<FiMoreHorizontal />} />
 
       {openDialog === ClientDialogType.UPDATE && (
-        <UpdateClientDialog clientId={clientId} onClose={() => setOpenDialog(null)} />
+        <UpdateClientDialog clientId={clientId} onClose={() => setOpenDialog(null)} onSuccess={onSuccess} />
       )}
       {openDialog === ClientDialogType.DELETE && (
-        <DeleteClientDialog clientId={clientId} onClose={() => setOpenDialog(null)} />
+        <DeleteClientDialog clientId={clientId} onClose={() => setOpenDialog(null)} onSuccess={onSuccess} />
       )}
     </>
   );
