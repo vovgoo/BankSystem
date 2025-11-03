@@ -22,7 +22,7 @@ export const ClientActionMenu: React.FC<ClientActionsMenuProps> = ({ clientId, o
   const [openDialog, setOpenDialog] = useState<ClientDialogType | null>(null);
 
   const onView = () => {
-    const path = AppRoutes.USER_DETAIL.replace(":id", clientId);
+    const path = AppRoutes.CLIENT_DETAILS.replace(":id", clientId);
     navigate(path);
   };
 
