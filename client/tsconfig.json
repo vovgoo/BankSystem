@@ -3,7 +3,7 @@
     "jsx": "react-jsx",
     "paths": {
       "@/*": ["./src/*"],
-      "@components/index": ["./src/components/index"],
+      "@components": ["./src/components/index"],
       "@components/*": ["./src/components/*"],
       "@api": ["./src/api/index"],
       "@api/*": ["./src/api/*"],
