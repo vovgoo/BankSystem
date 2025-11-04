@@ -11,7 +11,7 @@ type Item = {
   icon?: React.ReactNode;
 };
 
-export const Dashboard = () => {
+export const Dashboard: React.FC = () => {
   const [data, setData] = useState<StatsResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
