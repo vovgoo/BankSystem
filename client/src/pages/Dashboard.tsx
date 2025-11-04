@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Box, Heading, Text, SimpleGrid, Skeleton, Card } from '@chakra-ui/react';
 import type { StatsResponse } from '../api';
 import { statsService } from '../api';
+import { EmptyState } from '@/components';
+import { FiAlertCircle } from 'react-icons/fi';
 
 type Item = {
   label: string;
@@ -12,16 +14,22 @@ type Item = {
 export const Dashboard = () => {
   const [data, setData] = useState<StatsResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    setError(false);
+    try {
+      const res = await statsService.getOverview();
+      setData(res);
+    } catch (err) {
+      setError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await statsService.getOverview();
-        setData(res);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchData();
   }, []);
 
@@ -38,6 +46,15 @@ export const Dashboard = () => {
 
   const cardBg = '#114852';
   const textColor = '#E0E0E0';
+
+  if (error) {
+    return (
+      <EmptyState
+        icon={<FiAlertCircle size="30px" />}
+        title="Не удалось загрузить статистику"
+      />
+    );
+  }
 
   return (
     <Box p={8} color={textColor}>
