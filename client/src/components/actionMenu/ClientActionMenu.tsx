@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FiEye, FiEdit2, FiTrash2, FiMoreHorizontal } from 'react-icons/fi';
 import { DeleteClientDialog, UpdateClientDialog } from '@components';
 import type { UUID } from '@api';
-import { AppRoutes } from '@/routes';
+import { createClientDetailsRoute } from '@/routes';
 import { BaseMenu } from './BaseMenu';
 
 export const ClientDialogType = {
@@ -34,7 +34,7 @@ export const ClientActionMenu: React.FC<ClientActionsMenuProps> = ({ clientId, o
       value: 'view',
       icon: <FiEye />,
       label: 'Подробнее',
-      onSelect: () => navigate(AppRoutes.CLIENT_DETAILS.replace(':id', clientId)),
+      onSelect: () => navigate(createClientDetailsRoute(clientId)),
     },
     {
       value: 'edit',
