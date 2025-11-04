@@ -1,12 +1,12 @@
-import { toaster } from "@components";
-import { Box, Text } from "@chakra-ui/react";
-import { formatDate } from "./formatDate";
+import { toaster } from '@components';
+import { Box, Text } from '@chakra-ui/react';
+import { formatDate } from './formatDate';
 
 export const notifyTransaction = (error?: any) => {
   if (error) {
     const response = error.response?.data;
     toaster.error({
-      title: "Транзакция не была проведена",
+      title: 'Транзакция не была проведена',
       description: response ? (
         <>
           <Text>{response.message}</Text>
@@ -14,10 +14,12 @@ export const notifyTransaction = (error?: any) => {
             {formatDate(response.timestamp)}
           </Box>
         </>
-      ) : "Ошибка сервиса. Попробуйте позже",
+      ) : (
+        'Ошибка сервиса. Попробуйте позже'
+      ),
     });
     return;
   }
 
-  toaster.success({ title: "Транзакция прошла успешно" });
+  toaster.success({ title: 'Транзакция прошла успешно' });
 };

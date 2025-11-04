@@ -1,15 +1,17 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { Box } from "@chakra-ui/react";
-import { useParams } from "react-router-dom";
-import { clientsService } from "@api";
-import type { ClientDetailsResponse, PageParams, PageResponse, AccountSummaryResponse } from "@api";
-import { AccountsHeader, AccountsTable, EmptyState, LoadingError, PageLoader } from "@components";
-import { FiCreditCard } from "react-icons/fi";
+import React, { useEffect, useState, useCallback } from 'react';
+import { Box } from '@chakra-ui/react';
+import { useParams } from 'react-router-dom';
+import { clientsService } from '@api';
+import type { ClientDetailsResponse, PageParams, PageResponse, AccountSummaryResponse } from '@api';
+import { AccountsHeader, AccountsTable, EmptyState, LoadingError, PageLoader } from '@components';
+import { FiCreditCard } from 'react-icons/fi';
 
 export const ClientDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [client, setClient] = useState<ClientDetailsResponse | null>(null);
-  const [accountsData, setAccountsData] = useState<PageResponse<AccountSummaryResponse> | null>(null);
+  const [accountsData, setAccountsData] = useState<PageResponse<AccountSummaryResponse> | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const [pageParams, setPageParams] = useState<PageParams>({ page: 0, size: 10 });

@@ -1,14 +1,19 @@
-import React, { useState, useCallback } from "react";
-import { FiTrash2, FiMoreHorizontal, FiRepeat, FiArrowDown, FiPlusCircle } from "react-icons/fi";
-import { DeleteAccountDialog, DepositAccountDialog, TransferAccountDialog, WithdrawAccountDialog } from "../dialog";
-import { BaseMenu } from "./BaseMenu";
-import type { UUID } from "@api";
+import React, { useState, useCallback } from 'react';
+import { FiTrash2, FiMoreHorizontal, FiRepeat, FiArrowDown, FiPlusCircle } from 'react-icons/fi';
+import {
+  DeleteAccountDialog,
+  DepositAccountDialog,
+  TransferAccountDialog,
+  WithdrawAccountDialog,
+} from '../dialog';
+import { BaseMenu } from './BaseMenu';
+import type { UUID } from '@api';
 
 export const AccountDialogType = {
-  DEPOSIT: "deposit",
-  WITHDRAW: "withdraw",
-  TRANSFER: "transfer",
-  DELETE: "delete",
+  DEPOSIT: 'deposit',
+  WITHDRAW: 'withdraw',
+  TRANSFER: 'transfer',
+  DELETE: 'delete',
 } as const;
 
 export type AccountDialogType = (typeof AccountDialogType)[keyof typeof AccountDialogType];
@@ -31,10 +36,30 @@ export const AccountActionMenu: React.FC<AccountActionMenuProps> = ({ accountId,
   const closeDialog = useCallback(() => setOpenDialog(null), []);
 
   const menuItems = [
-    { value: "deposit", icon: <FiPlusCircle />, label: "Пополнить", onSelect: () => setOpenDialog(AccountDialogType.DEPOSIT) },
-    { value: "withdraw", icon: <FiArrowDown />, label: "Снять", onSelect: () => setOpenDialog(AccountDialogType.WITHDRAW) },
-    { value: "transfer", icon: <FiRepeat />, label: "Перевести", onSelect: () => setOpenDialog(AccountDialogType.TRANSFER) },
-    { value: "delete", icon: <FiTrash2 />, label: "Закрыть счет", onSelect: () => setOpenDialog(AccountDialogType.DELETE) },
+    {
+      value: 'deposit',
+      icon: <FiPlusCircle />,
+      label: 'Пополнить',
+      onSelect: () => setOpenDialog(AccountDialogType.DEPOSIT),
+    },
+    {
+      value: 'withdraw',
+      icon: <FiArrowDown />,
+      label: 'Снять',
+      onSelect: () => setOpenDialog(AccountDialogType.WITHDRAW),
+    },
+    {
+      value: 'transfer',
+      icon: <FiRepeat />,
+      label: 'Перевести',
+      onSelect: () => setOpenDialog(AccountDialogType.TRANSFER),
+    },
+    {
+      value: 'delete',
+      icon: <FiTrash2 />,
+      label: 'Закрыть счет',
+      onSelect: () => setOpenDialog(AccountDialogType.DELETE),
+    },
   ];
 
   const DialogComponent = openDialog ? DIALOG_COMPONENTS[openDialog] : null;
@@ -42,7 +67,14 @@ export const AccountActionMenu: React.FC<AccountActionMenuProps> = ({ accountId,
   return (
     <>
       <BaseMenu items={menuItems} triggerIcon={<FiMoreHorizontal />} />
-      {DialogComponent && <DialogComponent accountId={accountId} isOpen={true} onClose={closeDialog} onSuccess={onSuccess} />}
+      {DialogComponent && (
+        <DialogComponent
+          accountId={accountId}
+          isOpen={true}
+          onClose={closeDialog}
+          onSuccess={onSuccess}
+        />
+      )}
     </>
   );
 };

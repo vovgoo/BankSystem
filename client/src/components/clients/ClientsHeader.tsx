@@ -1,5 +1,5 @@
-import { Flex, HStack, Input, Heading } from "@chakra-ui/react";
-import { CreateClientDialogButton } from "@components";
+import { Flex, HStack, Input, Heading } from '@chakra-ui/react';
+import { CreateClientDialogButton } from '@components';
 
 interface ClientsHeaderProps {
   search: string;
@@ -14,7 +14,9 @@ export const ClientsHeader: React.FC<ClientsHeaderProps> = ({
 }) => {
   return (
     <>
-      <Heading mb={4} color="white">Список клиентов</Heading>
+      <Heading mb={4} color="white">
+        Список клиентов
+      </Heading>
       <Flex mb={6} justify="space-between" alignItems="center">
         <Input
           width="20%"
@@ -23,7 +25,7 @@ export const ClientsHeader: React.FC<ClientsHeaderProps> = ({
           value={search}
         />
         <HStack gap={3}>
-          <CreateClientDialogButton onSuccess={onCreateSuccess}/>
+          <CreateClientDialogButton onSuccess={onCreateSuccess} />
         </HStack>
       </Flex>
     </>

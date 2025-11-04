@@ -33,9 +33,7 @@ export const ResponsiveTable: React.FC<ResponsiveTableProps<any>> = ({
             count={totalElements}
             pageSize={pageParams.size}
             page={pageParams.page + 1}
-            onPageChange={(page) =>
-              setPageParams({ ...pageParams, page: page.page - 1 })
-            }
+            onPageChange={(page) => setPageParams({ ...pageParams, page: page.page - 1 })}
           >
             <ButtonGroup variant="ghost" size="sm" wrap="wrap">
               <Pagination.PrevTrigger asChild>
@@ -69,7 +67,7 @@ export const ResponsiveTable: React.FC<ResponsiveTableProps<any>> = ({
         <Table.Root size="sm" variant="outline" striped showColumnBorder minWidth="600px">
           <Table.Header>
             <Table.Row>
-              {columns.map(col => (
+              {columns.map((col) => (
                 <Table.ColumnHeader
                   key={String(col.key)}
                   textAlign={col.align || 'left'}
@@ -84,7 +82,7 @@ export const ResponsiveTable: React.FC<ResponsiveTableProps<any>> = ({
           <Table.Body>
             {data.map((row, idx) => (
               <Table.Row key={idx}>
-                {columns.map(col => (
+                {columns.map((col) => (
                   <Table.Cell key={String(col.key)} textAlign={col.align || 'left'}>
                     {col.render ? col.render(row[col.key], row) : row[col.key]}
                   </Table.Cell>

@@ -40,7 +40,7 @@ export class ApiClient {
       (error) => {
         if (error.response) {
           const errorResponse = error.response.data as TransactionResponse | undefined;
-          
+
           if (errorResponse?.message) {
             error.message = errorResponse.message;
           }

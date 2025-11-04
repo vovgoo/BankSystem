@@ -1,17 +1,17 @@
-import { useState } from "react";
-import { Button, Box } from "@chakra-ui/react";
+import { useState } from 'react';
+import { Button, Box } from '@chakra-ui/react';
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { BaseDialog } from "../base";
-import { TextInput, PhoneInput } from "@components";
+import { BaseDialog } from '../base';
+import { TextInput, PhoneInput } from '@components';
 
-import { createClientSchema } from "@schemas";
-import type { CreateClientFormData } from "@schemas";
+import { createClientSchema } from '@schemas';
+import type { CreateClientFormData } from '@schemas';
 
-import { clientsService } from "@api";
-import { notifyTransaction } from "@utils";
+import { clientsService } from '@api';
+import { notifyTransaction } from '@utils';
 
 type CreateClientDialogProps = {
   isOpen: boolean;
@@ -34,7 +34,7 @@ export const CreateClientDialog: React.FC<CreateClientDialogProps> = ({
     formState: { errors },
   } = useForm<CreateClientFormData>({
     resolver: zodResolver(createClientSchema),
-    defaultValues: { lastName: "", phone: "+375 " },
+    defaultValues: { lastName: '', phone: '+375 ' },
   });
 
   const onSubmit = async (data: CreateClientFormData) => {
@@ -63,8 +63,8 @@ export const CreateClientDialog: React.FC<CreateClientDialogProps> = ({
             <Box mb={4}>
               <TextInput
                 label="Фамилия"
-                value={watch("lastName")}
-                onChange={(val) => setValue("lastName", val)}
+                value={watch('lastName')}
+                onChange={(val) => setValue('lastName', val)}
                 error={errors.lastName?.message}
                 placeholder="Иванов"
               />
@@ -72,8 +72,8 @@ export const CreateClientDialog: React.FC<CreateClientDialogProps> = ({
             <Box mb={4}>
               <PhoneInput
                 label="Телефон"
-                value={watch("phone")}
-                onChange={(val) => setValue("phone", val)}
+                value={watch('phone')}
+                onChange={(val) => setValue('phone', val)}
                 error={errors.phone?.message}
               />
             </Box>

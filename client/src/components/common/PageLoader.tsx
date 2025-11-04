@@ -1,12 +1,12 @@
-import { Box, Text } from "@chakra-ui/react";
-import { CenteredSpinner } from "@components";
+import { Box, Text } from '@chakra-ui/react';
+import { CenteredSpinner } from '@components';
 
 type LoaderProps = {
   title?: string;
   height?: number | string;
 };
 
-export const PageLoader: React.FC<LoaderProps> = ({ title = "Загрузка...", height = 100 }) => (
+export const PageLoader: React.FC<LoaderProps> = ({ title = 'Загрузка...', height = 100 }) => (
   <Box
     flex={1}
     display="flex"

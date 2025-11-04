@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
-import { Button, Box } from "@chakra-ui/react";
+import { useEffect, useState } from 'react';
+import { Button, Box } from '@chakra-ui/react';
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { CenteredSpinner, TextInput, PhoneInput } from "@components";
-import { BaseDialog } from "../base";
+import { CenteredSpinner, TextInput, PhoneInput } from '@components';
+import { BaseDialog } from '../base';
 
-import { updateClientSchema } from "@schemas";
-import type { UpdateClientFormData } from "@schemas";
+import { updateClientSchema } from '@schemas';
+import type { UpdateClientFormData } from '@schemas';
 
-import { clientsService } from "@api";
-import type { UUID, GetClientResponse } from "@api";
+import { clientsService } from '@api';
+import type { UUID, GetClientResponse } from '@api';
 
-import { notifyTransaction } from "@utils";
+import { notifyTransaction } from '@utils';
 
 type UpdateClientDialogProps = {
   clientId: UUID;
@@ -31,7 +31,13 @@ export const UpdateClientDialog: React.FC<UpdateClientDialogProps> = ({
   const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { handleSubmit, reset, setValue, formState: { errors }, watch } = useForm<UpdateClientFormData>({
+  const {
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+    watch,
+  } = useForm<UpdateClientFormData>({
     resolver: zodResolver(updateClientSchema),
   });
 
@@ -39,7 +45,10 @@ export const UpdateClientDialog: React.FC<UpdateClientDialogProps> = ({
     async function fetchClient() {
       try {
         setLoading(true);
-        const data: GetClientResponse = await clientsService.getById(clientId, { page: 0, size: 1 });
+        const data: GetClientResponse = await clientsService.getById(clientId, {
+          page: 0,
+          size: 1,
+        });
         reset({
           id: clientId,
           lastName: data.lastName,
@@ -80,8 +89,8 @@ export const UpdateClientDialog: React.FC<UpdateClientDialogProps> = ({
               <Box mb={4}>
                 <TextInput
                   label="Фамилия"
-                  value={watch("lastName")}
-                  onChange={(value) => setValue("lastName", value)}
+                  value={watch('lastName')}
+                  onChange={(value) => setValue('lastName', value)}
                   error={errors.lastName?.message}
                   placeholder="Иванов"
                 />
@@ -89,8 +98,8 @@ export const UpdateClientDialog: React.FC<UpdateClientDialogProps> = ({
               <Box mb={4}>
                 <PhoneInput
                   label="Телефон"
-                  value={watch("phone")}
-                  onChange={(value) => setValue("phone", value)}
+                  value={watch('phone')}
+                  onChange={(value) => setValue('phone', value)}
                   error={errors.phone?.message}
                 />
               </Box>
@@ -100,7 +109,12 @@ export const UpdateClientDialog: React.FC<UpdateClientDialogProps> = ({
       }
       footer={
         <Box display="flex" justifyContent="center" gap={2}>
-          <Button type="submit" colorScheme="teal" loading={isLoading} onClick={handleSubmit(onSubmit)}>
+          <Button
+            type="submit"
+            colorScheme="teal"
+            loading={isLoading}
+            onClick={handleSubmit(onSubmit)}
+          >
             Изменить
           </Button>
         </Box>

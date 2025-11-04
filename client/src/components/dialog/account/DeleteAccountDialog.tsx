@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { Box, Button, Text } from "@chakra-ui/react";
-import { BaseDialog } from "../base";
-import { accountsService, UUID } from "@api";
-import { notifyTransaction } from "@/utils";
+import { useState } from 'react';
+import { Box, Button, Text } from '@chakra-ui/react';
+import { BaseDialog } from '../base';
+import { accountsService, UUID } from '@api';
+import { notifyTransaction } from '@/utils';
 
 type DeleteAccountDialogProps = {
   accountId: UUID;
@@ -40,7 +40,8 @@ export const DeleteAccountDialog: React.FC<DeleteAccountDialogProps> = ({
       title="Закрытие счета"
       body={
         <Text color="gray.400">
-          Вы собираетесь закрыть счет <strong className="text-white">{accountId}</strong>. Это действие нельзя будет отменить.
+          Вы собираетесь закрыть счет <strong className="text-white">{accountId}</strong>. Это
+          действие нельзя будет отменить.
         </Text>
       }
       footer={

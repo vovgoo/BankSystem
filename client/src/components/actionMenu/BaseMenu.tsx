@@ -1,5 +1,5 @@
-import React from "react";
-import { Button, Menu, Portal } from "@chakra-ui/react";
+import React from 'react';
+import { Button, Menu, Portal } from '@chakra-ui/react';
 
 type MenuItemProps = {
   value: string;
@@ -18,7 +18,7 @@ export const BaseMenu: React.FC<BaseMenuProps> = ({ items, triggerIcon }) => {
     <Menu.Root>
       <Menu.Trigger asChild>
         <Button outline="none" variant="ghost">
-          {triggerIcon || "⋮"}
+          {triggerIcon || '⋮'}
         </Button>
       </Menu.Trigger>
       <Portal>

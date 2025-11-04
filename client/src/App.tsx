@@ -9,11 +9,11 @@ function App() {
     <Box minH="100vh" display="flex" flexDirection="column" bg="#040404">
       <BrowserRouter>
         <Header />
-          <Routes>
-            <Route path={AppRoutes.DASHBOARD} element={<Dashboard />} />
-            <Route path={AppRoutes.CLIENTS} element={<Clients />} />
-            <Route path={AppRoutes.CLIENT_DETAILS} element={<ClientDetails />} />
-          </Routes>
+        <Routes>
+          <Route path={AppRoutes.DASHBOARD} element={<Dashboard />} />
+          <Route path={AppRoutes.CLIENTS} element={<Clients />} />
+          <Route path={AppRoutes.CLIENT_DETAILS} element={<ClientDetails />} />
+        </Routes>
       </BrowserRouter>
     </Box>
   );

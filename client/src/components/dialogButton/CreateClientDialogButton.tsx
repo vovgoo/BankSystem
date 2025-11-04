@@ -1,13 +1,15 @@
-import React, { useState, useCallback } from "react";
-import { Button } from "@chakra-ui/react";
-import { FiUserPlus } from "react-icons/fi";
-import { CreateClientDialog } from "@components";
+import React, { useState, useCallback } from 'react';
+import { Button } from '@chakra-ui/react';
+import { FiUserPlus } from 'react-icons/fi';
+import { CreateClientDialog } from '@components';
 
 type CreateClientDialogButtonProps = {
   onSuccess?: () => void;
 };
 
-export const CreateClientDialogButton: React.FC<CreateClientDialogButtonProps> = ({ onSuccess }) => {
+export const CreateClientDialogButton: React.FC<CreateClientDialogButtonProps> = ({
+  onSuccess,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const openDialog = useCallback(() => setIsOpen(true), []);
   const closeDialog = useCallback(() => setIsOpen(false), []);

@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
-import { Box } from "@chakra-ui/react";
-import { clientsService } from "@api";
-import type { ClientListItem, PageParams, PageResponse } from "@api";
-import { ClientsHeader, PageLoader, ClientsTable, LoadingError, EmptyState } from "@components";
-import { FiUsers } from "react-icons/fi";
+import { useEffect, useState } from 'react';
+import { Box } from '@chakra-ui/react';
+import { clientsService } from '@api';
+import type { ClientListItem, PageParams, PageResponse } from '@api';
+import { ClientsHeader, PageLoader, ClientsTable, LoadingError, EmptyState } from '@components';
+import { FiUsers } from 'react-icons/fi';
 
 export const Clients: React.FC = () => {
   const [data, setData] = useState<PageResponse<ClientListItem> | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
   const [pageParams, setPageParams] = useState<PageParams>({ page: 0, size: 10 });
 
   const fetchData = async (searchValue: string = search) => {
@@ -56,7 +56,7 @@ export const Clients: React.FC = () => {
           onActionSuccess={() => fetchData(search)}
         />
       ) : (
-        <EmptyState icon={<FiUsers size="30px"/>} title={"Клиенты не найдены"} />
+        <EmptyState icon={<FiUsers size="30px" />} title={'Клиенты не найдены'} />
       )}
     </Box>
   );

@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { Box, Button } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from 'react';
+import { Box, Button } from '@chakra-ui/react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { BaseDialog } from "../base";
-import { NumberInput } from "@components";
-import { withdrawSchema, type WithdrawFormData } from "@schemas";
-import { accountsService, UUID } from "@api";
-import { notifyTransaction } from "@utils";
+import { BaseDialog } from '../base';
+import { NumberInput } from '@components';
+import { withdrawSchema, type WithdrawFormData } from '@schemas';
+import { accountsService, UUID } from '@api';
+import { notifyTransaction } from '@utils';
 
 type WithdrawAccountDialogProps = {
   accountId: UUID;
@@ -59,8 +59,8 @@ export const WithdrawAccountDialog: React.FC<WithdrawAccountDialogProps> = ({
         <Box>
           <NumberInput
             label="Сумма снятия"
-            value={watch("amount")}
-            onChange={(val) => setValue("amount", val)}
+            value={watch('amount')}
+            onChange={(val) => setValue('amount', val)}
             error={errors.amount?.message}
             placeholder="0.00"
           />

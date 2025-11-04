@@ -1,7 +1,7 @@
-import React from "react";
-import { Box, Flex, Heading, Text, Skeleton } from "@chakra-ui/react";
-import { CopyableId, CreateAccountDialogButton, ClientDetailActionMenu } from "@components";
-import type { ClientDetailsResponse } from "@api";
+import React from 'react';
+import { Box, Flex, Heading, Text, Skeleton } from '@chakra-ui/react';
+import { CopyableId, CreateAccountDialogButton, ClientDetailActionMenu } from '@components';
+import type { ClientDetailsResponse } from '@api';
 
 type AccountsHeaderProps = {
   client: ClientDetailsResponse | null;
@@ -9,14 +9,23 @@ type AccountsHeaderProps = {
   onActionSuccess: () => void;
 };
 
-export const AccountsHeader: React.FC<AccountsHeaderProps> = ({ client, isLoading, onActionSuccess }) => (
+export const AccountsHeader: React.FC<AccountsHeaderProps> = ({
+  client,
+  isLoading,
+  onActionSuccess,
+}) => (
   <>
     <Flex justify="space-between" mb={10}>
       <Box>
         {isLoading ? (
           <Skeleton height="32px" width="325px" mb={4} />
         ) : (
-          <CopyableId id={client?.id} label="Идентификатор клиента" color="gray.300" justify="flex-start" />
+          <CopyableId
+            id={client?.id}
+            label="Идентификатор клиента"
+            color="gray.300"
+            justify="flex-start"
+          />
         )}
 
         {isLoading ? (
@@ -42,7 +51,7 @@ export const AccountsHeader: React.FC<AccountsHeaderProps> = ({ client, isLoadin
         ) : (
           <ClientDetailActionMenu clientId={client?.id} onSuccess={onActionSuccess} />
         )}
-      </Box>  
+      </Box>
     </Flex>
 
     <Flex mb={6} justify="space-between" alignItems="center">

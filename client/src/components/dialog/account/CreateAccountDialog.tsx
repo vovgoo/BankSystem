@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { Box, Button, Text } from "@chakra-ui/react";
-import { BaseDialog } from "../base";
-import { accountsService } from "@api";
-import { notifyTransaction } from "@utils";
-import type { UUID } from "@api";
+import { useState } from 'react';
+import { Box, Button, Text } from '@chakra-ui/react';
+import { BaseDialog } from '../base';
+import { accountsService } from '@api';
+import { notifyTransaction } from '@utils';
+import type { UUID } from '@api';
 
 type CreateAccountDialogProps = {
   clientId: UUID;
@@ -42,7 +42,8 @@ export const CreateAccountDialog: React.FC<CreateAccountDialogProps> = ({
       body={
         <Box>
           <Text mb={4}>
-            Вы собираетесь открыть новый счет для клиента <strong className="text-white">{clientId}</strong>.
+            Вы собираетесь открыть новый счет для клиента{' '}
+            <strong className="text-white">{clientId}</strong>.
           </Text>
         </Box>
       }

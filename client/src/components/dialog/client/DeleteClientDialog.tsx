@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { Box, Button, Text } from "@chakra-ui/react";
+import { useState } from 'react';
+import { Box, Button, Text } from '@chakra-ui/react';
 
-import type { UUID } from "@api";
-import { clientsService } from "@api";
+import type { UUID } from '@api';
+import { clientsService } from '@api';
 
-import { BaseDialog } from "../base";
-import { notifyTransaction } from "@utils";
+import { BaseDialog } from '../base';
+import { notifyTransaction } from '@utils';
 
 type DeleteClientDialogProps = {
   clientId: UUID;
@@ -43,7 +43,8 @@ export const DeleteClientDialog: React.FC<DeleteClientDialogProps> = ({
       title="Точно хотите удалить?"
       body={
         <Text color="gray.400">
-          Вы собираетесь удалить клиента <strong className="text-white">{clientId}</strong>. Это действие нельзя будет отменить.
+          Вы собираетесь удалить клиента <strong className="text-white">{clientId}</strong>. Это
+          действие нельзя будет отменить.
         </Text>
       }
       footer={

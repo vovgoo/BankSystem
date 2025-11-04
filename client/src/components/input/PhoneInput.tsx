@@ -1,5 +1,5 @@
-import React from "react";
-import { BaseInput } from "./BaseInput";
+import React from 'react';
+import { BaseInput } from './BaseInput';
 
 type PhoneInputProps = {
   value: string;
@@ -14,12 +14,12 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
   onChange,
   error,
   label,
-  placeholder = "+375 ",
+  placeholder = '+375 ',
 }) => {
   const formatDisplay = (val: string) => {
-    const digits = val.replace(/\D/g, "").slice(3, 12);
-    if (!digits) return "+375 ";
-    let formatted = "+375";
+    const digits = val.replace(/\D/g, '').slice(3, 12);
+    if (!digits) return '+375 ';
+    let formatted = '+375';
     if (digits.length >= 2) formatted += ` ${digits.slice(0, 2)}`;
     else formatted += ` ${digits.slice(0, 2)}`;
     if (digits.length > 2) formatted += ` ${digits.slice(2, 5)}`;
@@ -29,10 +29,10 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let digits = e.target.value.replace(/\D/g, "");
-    if (!digits.startsWith("375")) digits = "375" + digits.slice(3);
+    let digits = e.target.value.replace(/\D/g, '');
+    if (!digits.startsWith('375')) digits = '375' + digits.slice(3);
     digits = digits.slice(0, 12);
-    onChange("+" + digits);
+    onChange('+' + digits);
   };
 
   return (

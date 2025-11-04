@@ -1,14 +1,7 @@
-import { useEffect, useState } from "react";
-import {
-  Box,
-  Heading,
-  Text,
-  SimpleGrid,
-  Skeleton,
-  Card,
-} from "@chakra-ui/react";
-import type { StatsResponse } from "../api";
-import { statsService } from "../api";
+import { useEffect, useState } from 'react';
+import { Box, Heading, Text, SimpleGrid, Skeleton, Card } from '@chakra-ui/react';
+import type { StatsResponse } from '../api';
+import { statsService } from '../api';
 
 type Item = {
   label: string;
@@ -33,18 +26,18 @@ export const Dashboard = () => {
   }, []);
 
   const items: Item[] = [
-    { label: "Всего клиентов", value: data?.totalClients ?? 0 },
-    { label: "Клиентов с аккаунтами", value: data?.clientsWithAccounts ?? 0 },
-    { label: "Клиентов без аккаунтов", value: data?.clientsWithoutAccounts ?? 0 },
-    { label: "Всего аккаунтов", value: data?.totalAccounts ?? 0 },
-    { label: "Общий баланс", value: data?.totalBalance ?? 0 },
-    { label: "Средний баланс", value: data?.averageBalance ?? 0 },
-    { label: "Макс. баланс", value: data?.maxBalance ?? 0 },
-    { label: "Мин. баланс", value: data?.minBalance ?? 0 },
+    { label: 'Всего клиентов', value: data?.totalClients ?? 0 },
+    { label: 'Клиентов с аккаунтами', value: data?.clientsWithAccounts ?? 0 },
+    { label: 'Клиентов без аккаунтов', value: data?.clientsWithoutAccounts ?? 0 },
+    { label: 'Всего аккаунтов', value: data?.totalAccounts ?? 0 },
+    { label: 'Общий баланс', value: data?.totalBalance ?? 0 },
+    { label: 'Средний баланс', value: data?.averageBalance ?? 0 },
+    { label: 'Макс. баланс', value: data?.maxBalance ?? 0 },
+    { label: 'Мин. баланс', value: data?.minBalance ?? 0 },
   ];
 
-  const cardBg = "#114852";
-  const textColor = "#E0E0E0";
+  const cardBg = '#114852';
+  const textColor = '#E0E0E0';
 
   return (
     <Box p={8} color={textColor}>
@@ -62,7 +55,6 @@ export const Dashboard = () => {
             borderWidth={2}
             borderColor="#0B262B"
           >
-
             <Card.Body>
               <Box mt={2}>
                 <Text fontSize="xl" color={textColor}>
@@ -78,8 +70,8 @@ export const Dashboard = () => {
                   height="45px"
                   width="45px"
                   css={{
-                    "--start-color": "#0B262B",
-                    "--end-color": "#081A1E",
+                    '--start-color': '#0B262B',
+                    '--end-color': '#081A1E',
                   }}
                 />
               ) : (

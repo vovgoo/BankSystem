@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { Dialog, Portal, CloseButton } from "@chakra-ui/react";
+import { ReactNode } from 'react';
+import { Dialog, Portal, CloseButton } from '@chakra-ui/react';
 
 type BaseDialogProps = {
   isOpen: boolean;
@@ -17,10 +17,10 @@ export const BaseDialog: React.FC<BaseDialogProps> = ({ isOpen, onClose, title, 
           <Dialog.Content>
             {title && (
               <Dialog.Header>
-                  <Dialog.Title>{title}</Dialog.Title>
-                  <Dialog.CloseTrigger asChild>
-                    <CloseButton size="sm" outline="none" onClick={onClose} />
-                  </Dialog.CloseTrigger>
+                <Dialog.Title>{title}</Dialog.Title>
+                <Dialog.CloseTrigger asChild>
+                  <CloseButton size="sm" outline="none" onClick={onClose} />
+                </Dialog.CloseTrigger>
               </Dialog.Header>
             )}
             {body && <Dialog.Body>{body}</Dialog.Body>}

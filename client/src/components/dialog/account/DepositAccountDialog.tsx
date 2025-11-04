@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { Box, Button } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from 'react';
+import { Box, Button } from '@chakra-ui/react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { BaseDialog } from "../base";
-import { NumberInput } from "@components";
-import { depositSchema, type DepositFormData } from "@schemas";
-import { accountsService, UUID } from "@api";
-import { notifyTransaction } from "@utils";
+import { BaseDialog } from '../base';
+import { NumberInput } from '@components';
+import { depositSchema, type DepositFormData } from '@schemas';
+import { accountsService, UUID } from '@api';
+import { notifyTransaction } from '@utils';
 
 type DepositAccountDialogProps = {
   accountId: UUID;
@@ -59,8 +59,8 @@ export const DepositAccountDialog: React.FC<DepositAccountDialogProps> = ({
         <Box>
           <NumberInput
             label="Сумма пополнения"
-            value={watch("amount")}
-            onChange={(val) => setValue("amount", val)}
+            value={watch('amount')}
+            onChange={(val) => setValue('amount', val)}
             error={errors.amount?.message}
             placeholder="0.00"
           />

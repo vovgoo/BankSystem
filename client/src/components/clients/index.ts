@@ -1,2 +1,2 @@
-export { ClientsHeader } from "./ClientsHeader"
-export { ClientsTable } from "./ClientsTable" 
+export { ClientsHeader } from './ClientsHeader';
+export { ClientsTable } from './ClientsTable';

@@ -1,5 +1,5 @@
-import React from "react";
-import { BaseInput } from "./BaseInput";
+import React from 'react';
+import { BaseInput } from './BaseInput';
 
 type TextInputProps = {
   value: string;
@@ -15,7 +15,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   onChange,
   error,
   label,
-  type = "text",
+  type = 'text',
   placeholder,
 }) => {
   return (

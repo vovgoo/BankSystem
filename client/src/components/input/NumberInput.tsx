@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { BaseInput } from "./BaseInput";
+import React, { useState, useEffect } from 'react';
+import { BaseInput } from './BaseInput';
 
 type NumberInputProps = {
   value: number;
@@ -27,7 +27,7 @@ export const NumberInput: React.FC<NumberInputProps> = ({
       setDisplayValue(val);
       const parsed = parseFloat(val);
       if (!isNaN(parsed)) {
-        onChange(parsed); 
+        onChange(parsed);
       }
     }
   };

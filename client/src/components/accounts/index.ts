@@ -1,2 +1,2 @@
-export { AccountsHeader } from "./AccountsHeader"
-export { AccountsTable } from "./AccountsTable"
+export { AccountsHeader } from './AccountsHeader';
+export { AccountsTable } from './AccountsTable';
