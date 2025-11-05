@@ -1,5 +1,5 @@
-import { apiClient } from '../client';
-import type { StatsResponse } from '../types/stats.types';
+import { apiClient } from '../../client';
+import type { StatsResponse } from '../../types/stats';
 
 export class StatsService {
   private readonly basePath = '/api/v1/stats';

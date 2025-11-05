@@ -1,4 +1,10 @@
-import type { UUID, TransactionResponse } from './index';
+import type { UUID } from '../common';
+import type { TransactionResponse } from '../common';
+
+export interface AccountSummaryResponse {
+  id: UUID;
+  balance: number;
+}
 
 export interface CreateAccountRequest {
   clientId: UUID;

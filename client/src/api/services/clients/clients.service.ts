@@ -1,4 +1,4 @@
-import { apiClient } from '../client';
+import { apiClient } from '../../client';
 import type {
   CreateClientRequest,
   CreateClientResponse,
@@ -8,8 +8,8 @@ import type {
   GetClientResponse,
   SearchClientsResponse,
   SearchClientRequest,
-} from '../types/client.types';
-import type { PageParams } from '../types/pagination.types';
+} from '../../types/client';
+import type { PageParams } from '../../types/common';
 
 export class ClientsService {
   private readonly basePath = '/api/v1/clients';

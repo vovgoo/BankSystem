@@ -1,4 +1,4 @@
-import { apiClient } from '../client';
+import { apiClient } from '../../client';
 import type {
   CreateAccountRequest,
   CreateAccountResponse,
@@ -9,7 +9,7 @@ import type {
   TransferAccountRequest,
   TransferAccountResponse,
   DeleteAccountResponse,
-} from '../types/account.types';
+} from '../../types/account';
 
 export class AccountsService {
   private readonly basePath = '/api/v1/accounts';

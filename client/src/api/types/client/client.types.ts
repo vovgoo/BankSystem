@@ -1,10 +1,7 @@
-import type { UUID, TransactionResponse } from './index';
-import type { PageResponse } from './pagination.types';
-
-export interface AccountSummaryResponse {
-  id: UUID;
-  balance: number;
-}
+import type { UUID } from '../common';
+import type { PageResponse } from '../common';
+import type { TransactionResponse } from '../common';
+import type { AccountSummaryResponse } from '../account';
 
 export interface CreateClientRequest {
   lastName: string;

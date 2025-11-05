@@ -1,10 +1,12 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from 'axios';
-import type { TransactionResponse } from './types';
+import { ApiInterceptors } from './interceptors';
+import type { Toaster } from './transaction-notifications';
 
 export interface ApiClientConfig {
   baseURL?: string;
   timeout?: number;
   headers?: Record<string, string>;
+  getToaster?: () => Toaster;
 }
 
 export class ApiClient {
@@ -12,7 +14,7 @@ export class ApiClient {
 
   constructor(config: ApiClientConfig = {}) {
     this.axiosInstance = axios.create({
-      baseURL: config.baseURL ?? 'http://localhost:8080',
+      baseURL: config.baseURL ?? import.meta.env.VITE_API_URL ?? 'http://localhost:8080',
       timeout: config.timeout ?? 30000,
       headers: {
         'Content-Type': 'application/json',
@@ -20,39 +22,9 @@ export class ApiClient {
       },
     });
 
-    this.setupInterceptors();
-  }
-
-  private setupInterceptors(): void {
-    this.axiosInstance.interceptors.request.use(
-      (config) => {
-        return config;
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
-
-    this.axiosInstance.interceptors.response.use(
-      (response) => {
-        return response;
-      },
-      (error) => {
-        if (error.response) {
-          const errorResponse = error.response.data as TransactionResponse | undefined;
-
-          if (errorResponse?.message) {
-            error.message = errorResponse.message;
-          }
-        } else if (error.request) {
-          error.message = 'Не удалось получить ответ от сервера';
-        } else {
-          error.message = error.message || 'Произошла неизвестная ошибка';
-        }
-
-        return Promise.reject(error);
-      }
-    );
+    ApiInterceptors.setup(this.axiosInstance, {
+      getToaster: config.getToaster,
+    });
   }
 
   async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
@@ -70,6 +42,11 @@ export class ApiClient {
     return response.data;
   }
 
+  async patch<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+    const response: AxiosResponse<T> = await this.axiosInstance.patch(url, data, config);
+    return response.data;
+  }
+
   async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     const response: AxiosResponse<T> = await this.axiosInstance.delete(url, config);
     return response.data;
@@ -80,4 +57,19 @@ export class ApiClient {
   }
 }
 
-export const apiClient = new ApiClient();
+let globalToaster: (() => Toaster) | undefined;
+
+export function initializeWithToaster(getToaster: () => Toaster): void {
+  globalToaster = getToaster;
+  const newInstance = axios.create({
+    baseURL: apiClient.getAxiosInstance().defaults.baseURL,
+    timeout: apiClient.getAxiosInstance().defaults.timeout,
+    headers: apiClient.getAxiosInstance().defaults.headers,
+  });
+
+  ApiInterceptors.setup(newInstance, { getToaster });
+
+  (apiClient as any).axiosInstance = newInstance;
+}
+
+export const apiClient = new ApiClient(globalToaster ? { getToaster: globalToaster } : {});
