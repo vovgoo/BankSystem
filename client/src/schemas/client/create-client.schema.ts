@@ -12,14 +12,4 @@ export const createClientSchema = z.object({
   phone: z.string().regex(/^\+375\d{9}$/, 'Телефон должен быть в формате +375 29 123-45-67'),
 });
 
-export const updateClientSchema = createClientSchema.extend({
-  id: z.string().uuid('ID клиента должен быть UUID'),
-});
-
-export const searchClientSchema = z.object({
-  lastName: z.string().optional(),
-});
-
 export type CreateClientFormData = z.infer<typeof createClientSchema>;
-export type UpdateClientFormData = z.infer<typeof updateClientSchema>;
-export type SearchClientFormData = z.infer<typeof searchClientSchema>;
