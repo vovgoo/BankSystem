@@ -1,4 +1,4 @@
-import { apiClient } from '../../client';
+import { apiClient } from '../../core';
 import type { StatsResponse } from '../../types/stats';
 
 export class StatsService {
