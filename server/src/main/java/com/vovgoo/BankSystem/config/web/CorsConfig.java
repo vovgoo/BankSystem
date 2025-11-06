@@ -1,20 +1,25 @@
 package com.vovgoo.BankSystem.config.web;
 
+import com.vovgoo.BankSystem.config.properties.CorsProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+@RequiredArgsConstructor
 public class CorsConfig implements WebMvcConfigurer {
+
+    private final CorsProperties corsProperties;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry
                 .addMapping("/**")
-                .allowedOrigins("http://localhost:5173")
-                .allowedMethods("*")
-                .allowedHeaders("*")
-                .allowCredentials(true)
-                .maxAge(3600);
+                .allowedOrigins(corsProperties.getAllowedOrigins().toArray(new String[0]))
+                .allowedMethods(corsProperties.getAllowedMethods())
+                .allowedHeaders(corsProperties.getAllowedHeaders())
+                .allowCredentials(corsProperties.isAllowCredentials())
+                .maxAge(corsProperties.getMaxAge());
     }
 }
