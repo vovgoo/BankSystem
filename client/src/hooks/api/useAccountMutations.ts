@@ -1,12 +1,12 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
 import { accountsService } from '@api';
-import type { UUID } from '@api';
+import type { UUID, TransactionResponse } from '@api';
 import type { DepositFormData, WithdrawFormData, TransferFormData } from '@schemas';
 
 export const useCreateAccount = (
   clientId: UUID,
   onSuccess?: () => void
-): ReturnType<typeof useMutation> => {
+): UseMutationResult<TransactionResponse, Error, void> => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -18,7 +18,9 @@ export const useCreateAccount = (
   });
 };
 
-export const useDepositAccount = (onSuccess?: () => void): ReturnType<typeof useMutation> => {
+export const useDepositAccount = (
+  onSuccess?: () => void
+): UseMutationResult<TransactionResponse, Error, DepositFormData> => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -30,7 +32,9 @@ export const useDepositAccount = (onSuccess?: () => void): ReturnType<typeof use
   });
 };
 
-export const useWithdrawAccount = (onSuccess?: () => void): ReturnType<typeof useMutation> => {
+export const useWithdrawAccount = (
+  onSuccess?: () => void
+): UseMutationResult<TransactionResponse, Error, WithdrawFormData> => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -42,7 +46,9 @@ export const useWithdrawAccount = (onSuccess?: () => void): ReturnType<typeof us
   });
 };
 
-export const useTransferAccount = (onSuccess?: () => void): ReturnType<typeof useMutation> => {
+export const useTransferAccount = (
+  onSuccess?: () => void
+): UseMutationResult<TransactionResponse, Error, TransferFormData> => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -54,7 +60,9 @@ export const useTransferAccount = (onSuccess?: () => void): ReturnType<typeof us
   });
 };
 
-export const useDeleteAccount = (onSuccess?: () => void): ReturnType<typeof useMutation> => {
+export const useDeleteAccount = (
+  onSuccess?: () => void
+): UseMutationResult<TransactionResponse, Error, UUID> => {
   const queryClient = useQueryClient();
 
   return useMutation({

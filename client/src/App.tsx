@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, type ReactElement } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { MainLayout, ErrorBoundary, LoadingView } from '@components';
 import { AppRoutes } from './routes';

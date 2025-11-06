@@ -41,7 +41,7 @@ export const ClientsTable: React.FC<ClientsTableProps> = memo(
           title: 'Действия',
           key: 'actions',
           align: 'center',
-          render: (unusedValue: unknown, row: ClientListItem) => (
+          render: (_: unknown, row: ClientListItem) => (
             <ClientActionMenu clientId={row.id} onSuccess={onActionSuccess} />
           ),
         },

@@ -4,6 +4,7 @@ import { ClientsHeader, LoadingView, ClientsTable, ErrorView, EmptyView } from '
 import { FiUsers } from 'react-icons/fi';
 import { useDebounce, usePagination, useClients } from '@/hooks';
 import { DEBOUNCE_DELAY, DEFAULT_PAGE } from '@/constants';
+import type { PageResponse, ClientListItem } from '@api';
 
 export const Clients: React.FC = () => {
   const [search, setSearch] = useState('');
@@ -42,9 +43,9 @@ export const Clients: React.FC = () => {
         <ErrorView onRetry={handleRetry} />
       ) : isLoading || !data ? (
         <LoadingView title="Загружаем пользователей" />
-      ) : data.content.length > 0 ? (
+      ) : (data as PageResponse<ClientListItem>).content.length > 0 ? (
         <ClientsTable
-          data={data}
+          data={data as PageResponse<ClientListItem>}
           pageParams={pageParams}
           setPageParams={setParams}
           onActionSuccess={handleActionSuccess}

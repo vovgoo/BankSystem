@@ -54,7 +54,7 @@ export const Dashboard: React.FC = () => {
     if (!data) return [];
     return STAT_ITEMS.map((item) => ({
       ...item,
-      value: getStatValue(data, item.id),
+      value: getStatValue(data as StatsResponse, item.id),
     }));
   }, [data]);
 

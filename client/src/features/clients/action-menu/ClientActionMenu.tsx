@@ -41,7 +41,9 @@ export const ClientActionMenu: React.FC<ClientActionsMenuProps> = ({ clientId, o
       value: 'view',
       icon: <FiEye />,
       label: 'Подробнее',
-      onSelect: (): void => navigate(createClientDetailsRoute(clientId)),
+      onSelect: (): void => {
+        void navigate(createClientDetailsRoute(clientId));
+      },
     },
     {
       value: 'edit',

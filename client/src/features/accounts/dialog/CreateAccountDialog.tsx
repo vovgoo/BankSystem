@@ -22,7 +22,7 @@ export const CreateAccountDialog: React.FC<CreateAccountDialogProps> = ({
   });
 
   const handleConfirm = (): void => {
-    mutation.mutate();
+    mutation.mutate(undefined);
   };
 
   return (
