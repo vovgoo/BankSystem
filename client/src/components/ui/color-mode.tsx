@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import type { IconButtonProps, SpanProps } from '@chakra-ui/react';
 import { IconButton, Span } from '@chakra-ui/react';
 import { ThemeProvider, useTheme } from 'next-themes';
@@ -5,9 +6,9 @@ import type { ThemeProviderProps } from 'next-themes';
 import * as React from 'react';
 import { LuMoon, LuSun } from 'react-icons/lu';
 
-export interface ColorModeProviderProps extends ThemeProviderProps {}
+export type ColorModeProviderProps = ThemeProviderProps;
 
-export function ColorModeProvider(props: ColorModeProviderProps) {
+export function ColorModeProvider(props: ColorModeProviderProps): React.ReactElement {
   return <ThemeProvider attribute="class" disableTransitionOnChange {...props} />;
 }
 
@@ -22,7 +23,7 @@ export interface UseColorModeReturn {
 export function useColorMode(): UseColorModeReturn {
   const { resolvedTheme, setTheme, forcedTheme } = useTheme();
   const colorMode = forcedTheme || resolvedTheme;
-  const toggleColorMode = () => {
+  const toggleColorMode = (): void => {
     setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
   };
   return {
@@ -32,17 +33,17 @@ export function useColorMode(): UseColorModeReturn {
   };
 }
 
-export function useColorModeValue<T>(light: T, dark: T) {
+export function useColorModeValue<T>(light: T, dark: T): T {
   const { colorMode } = useColorMode();
   return colorMode === 'dark' ? dark : light;
 }
 
-export function ColorModeIcon() {
+export function ColorModeIcon(): React.ReactElement {
   const { colorMode } = useColorMode();
   return colorMode === 'dark' ? <LuMoon /> : <LuSun />;
 }
 
-interface ColorModeButtonProps extends Omit<IconButtonProps, 'aria-label'> {}
+type ColorModeButtonProps = Omit<IconButtonProps, 'aria-label'>;
 
 export const ColorModeButton = React.forwardRef<HTMLButtonElement, ColorModeButtonProps>(
   function ColorModeButton(props, ref) {

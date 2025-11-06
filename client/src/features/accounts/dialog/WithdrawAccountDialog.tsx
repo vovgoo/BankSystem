@@ -35,7 +35,7 @@ export const WithdrawAccountDialog: React.FC<WithdrawAccountDialogProps> = ({
     }
   }, [isOpen, accountId, form]);
 
-  const handleSubmit = (data: WithdrawFormData) => {
+  const handleSubmit = (data: WithdrawFormData): void => {
     mutation.mutate(data);
   };
 

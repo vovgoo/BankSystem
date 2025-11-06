@@ -25,7 +25,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   isLoading = false,
   confirmColorScheme = 'red',
 }) => {
-  const handleConfirm = () => {
+  const handleConfirm = (): void => {
     onConfirm();
   };
 

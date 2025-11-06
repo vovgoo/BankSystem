@@ -34,7 +34,7 @@ export const AccountsTable: React.FC<AccountsTableProps> = memo(
           title: 'Действия',
           key: 'actions',
           align: 'center',
-          render: (_: unknown, row: AccountSummaryResponse) => (
+          render: (unusedValue: unknown, row: AccountSummaryResponse) => (
             <AccountActionMenu accountId={row.id} onSuccess={onActionSuccess} />
           ),
         },

@@ -3,7 +3,10 @@ import { accountsService } from '@api';
 import type { UUID } from '@api';
 import type { DepositFormData, WithdrawFormData, TransferFormData } from '@schemas';
 
-export const useCreateAccount = (clientId: UUID, onSuccess?: () => void) => {
+export const useCreateAccount = (
+  clientId: UUID,
+  onSuccess?: () => void
+): ReturnType<typeof useMutation> => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -15,7 +18,7 @@ export const useCreateAccount = (clientId: UUID, onSuccess?: () => void) => {
   });
 };
 
-export const useDepositAccount = (onSuccess?: () => void) => {
+export const useDepositAccount = (onSuccess?: () => void): ReturnType<typeof useMutation> => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -27,7 +30,7 @@ export const useDepositAccount = (onSuccess?: () => void) => {
   });
 };
 
-export const useWithdrawAccount = (onSuccess?: () => void) => {
+export const useWithdrawAccount = (onSuccess?: () => void): ReturnType<typeof useMutation> => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -39,7 +42,7 @@ export const useWithdrawAccount = (onSuccess?: () => void) => {
   });
 };
 
-export const useTransferAccount = (onSuccess?: () => void) => {
+export const useTransferAccount = (onSuccess?: () => void): ReturnType<typeof useMutation> => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -51,7 +54,7 @@ export const useTransferAccount = (onSuccess?: () => void) => {
   });
 };
 
-export const useDeleteAccount = (onSuccess?: () => void) => {
+export const useDeleteAccount = (onSuccess?: () => void): ReturnType<typeof useMutation> => {
   const queryClient = useQueryClient();
 
   return useMutation({

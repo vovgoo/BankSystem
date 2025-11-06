@@ -24,12 +24,12 @@ class Logger {
         break;
       case 'info':
         if (this.isDev) {
-          console.info(logMessage, context || '');
+          console.warn(logMessage, context || '');
         }
         break;
       case 'debug':
         if (this.isDev) {
-          console.debug(logMessage, context || '');
+          console.warn(logMessage, context || '');
         }
         break;
     }

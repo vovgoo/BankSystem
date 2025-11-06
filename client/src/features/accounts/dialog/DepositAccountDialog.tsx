@@ -35,7 +35,7 @@ export const DepositAccountDialog: React.FC<DepositAccountDialogProps> = ({
     }
   }, [isOpen, accountId, form]);
 
-  const handleSubmit = (data: DepositFormData) => {
+  const handleSubmit = (data: DepositFormData): void => {
     mutation.mutate(data);
   };
 

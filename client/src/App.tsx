@@ -8,7 +8,7 @@ const Clients = lazy(() => import('@pages').then((m) => ({ default: m.Clients })
 const ClientDetails = lazy(() => import('@pages').then((m) => ({ default: m.ClientDetails })));
 const NotFound = lazy(() => import('@pages').then((m) => ({ default: m.NotFound })));
 
-function App() {
+function App(): ReactElement {
   return (
     <BrowserRouter>
       <ErrorBoundary>

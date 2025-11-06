@@ -1,4 +1,4 @@
-export const formatDate = (timestamp: string) => {
+export const formatDate = (timestamp: string): string => {
   const date = new Date(timestamp);
   const offsetMinutes = -date.getTimezoneOffset();
   const localDate = new Date(date.getTime() + offsetMinutes * 60 * 1000);

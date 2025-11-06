@@ -50,7 +50,7 @@ export const UpdateClientDialog: React.FC<UpdateClientDialogProps> = ({
     }
   }, [clientData, form]);
 
-  const handleSubmit = (data: UpdateClientFormData) => {
+  const handleSubmit = (data: UpdateClientFormData): void => {
     mutation.mutate(data);
   };
 

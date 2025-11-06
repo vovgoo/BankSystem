@@ -27,7 +27,7 @@ export const CreateClientDialog: React.FC<CreateClientDialogProps> = ({
     defaultValues: { lastName: '', phone: '+375 ' },
   });
 
-  const handleSubmit = (data: CreateClientFormData) => {
+  const handleSubmit = (data: CreateClientFormData): void => {
     mutation.mutate(data);
   };
 

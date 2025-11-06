@@ -20,20 +20,32 @@ export const ClientDetails: React.FC = () => {
   const { page, size, setParams } = usePagination();
 
   const validId = useMemo(() => validateUuid(id), [id]);
+  const pageParams = useMemo(() => ({ page, size }), [page, size]);
+
+  const {
+    data: client,
+    isLoading,
+    error,
+    refetch,
+  } = useClient(
+    validId || '',
+    { page, size },
+    {
+      enabled: !!validId,
+    }
+  );
+
+  const handleRetry = useCallback(() => {
+    refetch();
+  }, [refetch]);
+
+  const handleActionSuccess = useCallback(() => {
+    refetch();
+  }, [refetch]);
 
   if (!validId) {
     return <Navigate to={AppRoutes.CLIENTS} replace />;
   }
-
-  const { data: client, isLoading, error, refetch } = useClient(validId, { page, size });
-
-  const pageParams = useMemo(() => ({ page, size }), [page, size]);
-  const handleRetry = useCallback(() => {
-    refetch();
-  }, [refetch]);
-  const handleActionSuccess = useCallback(() => {
-    refetch();
-  }, [refetch]);
 
   if (error && !isLoading) {
     return <NotFound />;

@@ -28,7 +28,6 @@ export const colors = {
     canvas: '#040404',
     card: '#1A1A1A',
     border: '#2A2A2A',
-    table: '#1A1A1A',
   },
   text: {
     primary: '#E0E0E0',
