@@ -17,16 +17,17 @@ jobs:
         working-directory: client
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: 'yarn' 
+          cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: yarn install
 
       - name: Lint
         run: yarn lint
@@ -36,3 +37,6 @@ jobs:
 
       - name: Build
         run: yarn build
+
+      - name: Check code formatting
+        run: yarn format:check
