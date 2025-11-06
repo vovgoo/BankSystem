@@ -1,0 +1,39 @@
+name: Client CI
+
+on:
+  push:
+    paths:
+      - 'client/**'
+  pull_request:
+    paths:
+      - 'client/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: client
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        
+      - name: Install dependencies
+        run: yarn install 
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Type-check
+        run: yarn type-check
+
+      - name: Build
+        run: yarn build
+
+      - name: Check code formatting
+        run: yarn format:check
