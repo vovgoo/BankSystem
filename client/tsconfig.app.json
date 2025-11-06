@@ -21,8 +21,6 @@
       "@api/*": ["./src/api/*"],
       "@components": ["./src/components"],
       "@components/*": ["./src/components/*"],
-      "@hooks": ["./src/hooks"],
-      "@hooks/*": ["./src/hooks/*"],
       "@schemas": ["./src/schemas"],
       "@schemas/*": ["./src/schemas/*"],
       "@pages": ["./src/pages"],
@@ -30,7 +28,9 @@
       "@utils": ["./src/utils"],
       "@utils/*": ["./src/utils/*"],
       "@routes": ["./src/routes"],
-      "@routes/*": ["./src/routes/*"]
+      "@routes/*": ["./src/routes/*"],
+      "@theme": ["./src/theme"],
+      "@theme/*": ["./src/theme/*"]
     },
 
     /* Linting */

@@ -46,12 +46,15 @@ export class ApiInterceptors {
 
         return config?.onResponse ? config.onResponse(response) : response;
       },
-      (error: AxiosError<TransactionResponse>) => {
+      async (error: AxiosError<TransactionResponse>) => {
         const apiError = ApiErrorHandler.handle(error);
 
-        if (import.meta.env.DEV) {
-          console.error('API Error:', apiError);
-        }
+        const { logger } = await import('@utils');
+        logger.error('API Error', {
+          error: apiError,
+          url: error.config?.url,
+          method: error.config?.method,
+        });
 
         const metadata = error.config ? requestMetadata.get(error.config) : undefined;
         const isTransaction = metadata?.isTransaction;

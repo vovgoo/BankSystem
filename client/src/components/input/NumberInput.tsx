@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import { BaseInput } from './BaseInput';
 
 type NumberInputProps = {
@@ -9,36 +9,37 @@ type NumberInputProps = {
   placeholder?: string;
 };
 
-export const NumberInput: React.FC<NumberInputProps> = ({
-  value,
-  onChange,
-  error,
-  label,
-  placeholder,
-}) => {
-  const [displayValue, setDisplayValue] = useState(value.toString());
+export const NumberInput: React.FC<NumberInputProps> = memo(
+  ({ value, onChange, error, label, placeholder }) => {
+    const [displayValue, setDisplayValue] = useState(value.toString());
 
-  useEffect(() => {
-    setDisplayValue(value.toString());
-  }, [value]);
+    useEffect(() => {
+      setDisplayValue(value.toString());
+    }, [value]);
 
-  const handleChange = (val: string) => {
-    if (/^\d*\.?\d*$/.test(val)) {
-      setDisplayValue(val);
-      const parsed = parseFloat(val);
-      if (!isNaN(parsed)) {
-        onChange(parsed);
-      }
-    }
-  };
+    const handleChange = useCallback(
+      (val: string): void => {
+        if (/^\d*\.?\d*$/.test(val)) {
+          setDisplayValue(val);
+          const parsed = parseFloat(val);
+          if (!isNaN(parsed)) {
+            onChange(parsed);
+          } else if (val === '' || val === '.') {
+            onChange(0);
+          }
+        }
+      },
+      [onChange]
+    );
 
-  return (
-    <BaseInput
-      label={label}
-      value={displayValue}
-      onChange={(e) => handleChange(e.target.value)}
-      error={error}
-      placeholder={placeholder}
-    />
-  );
-};
+    return (
+      <BaseInput
+        label={label}
+        value={displayValue}
+        onChange={(e) => handleChange(e.target.value)}
+        error={error}
+        placeholder={placeholder}
+      />
+    );
+  }
+);

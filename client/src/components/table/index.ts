@@ -1,2 +1,2 @@
-export { ResponsiveTable } from './ResponsiveTable';
-export type { Column } from './ResponsiveTable';
+export { ResponsiveTable } from './BaseTable';
+export type { Column } from './BaseTable';

@@ -17,8 +17,6 @@ export default defineConfig({
       '@api/*': path.resolve(srcPath, 'api', '*'),
       '@components': path.resolve(srcPath, 'components'),
       '@components/*': path.resolve(srcPath, 'components', '*'),
-      '@hooks': path.resolve(srcPath, 'hooks'),
-      '@hooks/*': path.resolve(srcPath, 'hooks', '*'),
       '@schemas': path.resolve(srcPath, 'schemas'),
       '@schemas/*': path.resolve(srcPath, 'schemas', '*'),
       '@pages': path.resolve(srcPath, 'pages'),
@@ -27,6 +25,8 @@ export default defineConfig({
       '@utils/*': path.resolve(srcPath, 'utils', '*'),
       '@routes': path.resolve(srcPath, 'routes'),
       '@routes/*': path.resolve(srcPath, 'routes', '*'),
+      '@theme': path.resolve(srcPath, 'theme'),
+      '@theme/*': path.resolve(srcPath, 'theme', '*'),
     },
   },
   build: {

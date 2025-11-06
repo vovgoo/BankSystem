@@ -1,62 +1,73 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import { useMemo, useCallback } from 'react';
 import { Box } from '@chakra-ui/react';
-import { useParams } from 'react-router-dom';
-import { clientsService } from '@api';
-import type { ClientDetailsResponse, PageParams, PageResponse, AccountSummaryResponse } from '@api';
-import { AccountsHeader, AccountsTable, EmptyState, LoadingError, PageLoader } from '@components';
+import { useParams, Navigate } from 'react-router-dom';
+import {
+  ClientDetailsHeader,
+  AccountsHeader,
+  AccountsTable,
+  EmptyView,
+  ErrorView,
+  LoadingView,
+} from '@components';
 import { FiCreditCard } from 'react-icons/fi';
+import { usePagination, useClient } from '@/hooks';
+import { validateUuid } from '@utils';
+import { AppRoutes } from '@routes';
+import { NotFound } from './NotFound';
 
 export const ClientDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [client, setClient] = useState<ClientDetailsResponse | null>(null);
-  const [accountsData, setAccountsData] = useState<PageResponse<AccountSummaryResponse> | null>(
-    null
-  );
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [pageParams, setPageParams] = useState<PageParams>({ page: 0, size: 10 });
+  const { page, size, setParams } = usePagination();
 
-  const fetchClient = useCallback(async () => {
-    if (!id) return;
-    setIsLoading(true);
-    setError(false);
-    try {
-      const res = await clientsService.getById(id, pageParams);
-      setClient(res);
-      setAccountsData(res.accounts);
-    } catch (err) {
-      console.error(err);
-      setError(true);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [id, pageParams]);
+  const validId = useMemo(() => validateUuid(id), [id]);
 
-  useEffect(() => {
-    fetchClient();
-  }, [fetchClient]);
+  if (!validId) {
+    return <Navigate to={AppRoutes.CLIENTS} replace />;
+  }
 
-  const onActionSuccess = () => {
-    fetchClient();
-  };
+  const { data: client, isLoading, error, refetch } = useClient(validId, { page, size });
+
+  const pageParams = useMemo(() => ({ page, size }), [page, size]);
+  const handleRetry = useCallback(() => {
+    refetch();
+  }, [refetch]);
+  const handleActionSuccess = useCallback(() => {
+    refetch();
+  }, [refetch]);
+
+  if (error && !isLoading) {
+    return <NotFound />;
+  }
 
   return (
     <Box flex={1} display="flex" flexDirection="column" p={6} overflow="auto">
-      <AccountsHeader client={client} isLoading={isLoading} onActionSuccess={onActionSuccess} />
-
+      <ClientDetailsHeader
+        client={client ?? null}
+        isLoading={isLoading}
+        onActionSuccess={handleActionSuccess}
+      />
       {error ? (
-        <LoadingError onRetry={fetchClient} />
-      ) : isLoading || !accountsData ? (
-        <PageLoader title="Загружаем счета клиента" />
-      ) : accountsData.content && accountsData.content.length > 0 ? (
-        <AccountsTable
-          data={accountsData}
-          pageParams={pageParams}
-          setPageParams={setPageParams}
-          onActionSuccess={onActionSuccess}
-        />
+        <ErrorView onRetry={handleRetry} />
+      ) : isLoading || !client ? (
+        <LoadingView title="Загружаем счета клиента" />
       ) : (
-        <EmptyState icon={<FiCreditCard size="30px" />} title="Счета не найдены" />
+        <>
+          <AccountsHeader
+            client={client}
+            isLoading={isLoading}
+            onActionSuccess={handleActionSuccess}
+          />
+          {client.accounts.content.length > 0 ? (
+            <AccountsTable
+              data={client.accounts}
+              pageParams={pageParams}
+              setPageParams={setParams}
+              onActionSuccess={handleActionSuccess}
+            />
+          ) : (
+            <EmptyView icon={<FiCreditCard size="30px" />} title="Счета не найдены" />
+          )}
+        </>
       )}
     </Box>
   );

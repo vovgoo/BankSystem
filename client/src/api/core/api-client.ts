@@ -10,7 +10,7 @@ export interface ApiClientConfig {
 }
 
 export class ApiClient {
-  private readonly axiosInstance: AxiosInstance;
+  private axiosInstance: AxiosInstance;
 
   constructor(config: ApiClientConfig = {}) {
     this.axiosInstance = axios.create({
@@ -69,7 +69,7 @@ export function initializeWithToaster(getToaster: () => Toaster): void {
 
   ApiInterceptors.setup(newInstance, { getToaster });
 
-  (apiClient as any).axiosInstance = newInstance;
+  Object.assign(apiClient, { axiosInstance: newInstance } as Partial<ApiClient>);
 }
 
 export const apiClient = new ApiClient(globalToaster ? { getToaster: globalToaster } : {});

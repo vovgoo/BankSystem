@@ -1,3 +1,4 @@
+export { BaseInput } from './BaseInput';
 export { TextInput } from './TextInput';
 export { PhoneInput } from './PhoneInput';
 export { NumberInput } from './NumberInput';

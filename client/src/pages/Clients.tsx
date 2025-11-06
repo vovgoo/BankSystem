@@ -1,62 +1,56 @@
-import { useEffect, useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { Box } from '@chakra-ui/react';
-import { clientsService } from '@api';
-import type { ClientListItem, PageParams, PageResponse } from '@api';
-import { ClientsHeader, PageLoader, ClientsTable, LoadingError, EmptyState } from '@components';
+import { ClientsHeader, LoadingView, ClientsTable, ErrorView, EmptyView } from '@components';
 import { FiUsers } from 'react-icons/fi';
+import { useDebounce, usePagination, useClients } from '@/hooks';
+import { DEBOUNCE_DELAY, DEFAULT_PAGE } from '@/constants';
 
 export const Clients: React.FC = () => {
-  const [data, setData] = useState<PageResponse<ClientListItem> | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
-  const [search, setSearch] = useState<string>('');
-  const [pageParams, setPageParams] = useState<PageParams>({ page: 0, size: 10 });
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, DEBOUNCE_DELAY);
+  const { page, size, setParams } = usePagination();
 
-  const fetchData = async (searchValue: string = search) => {
-    setIsLoading(true);
-    setError(false);
-    try {
-      const res = await clientsService.search({ lastName: searchValue }, pageParams);
-      setData(res);
-    } catch (err) {
-      console.error(err);
-      setError(true);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { data, isLoading, error, refetch } = useClients(
+    { lastName: debouncedSearch },
+    { page, size }
+  );
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      fetchData(search);
-    }, 500);
-    return () => clearTimeout(handler);
-  }, [search, pageParams]);
+  const handleSearchChange = useCallback(
+    (val: string) => {
+      setSearch(val);
+      setParams({ page: DEFAULT_PAGE, size });
+    },
+    [setParams, size]
+  );
+
+  const pageParams = useMemo(() => ({ page, size }), [page, size]);
+  const handleRetry = useCallback(() => {
+    refetch();
+  }, [refetch]);
+  const handleActionSuccess = useCallback(() => {
+    refetch();
+  }, [refetch]);
 
   return (
     <Box flex={1} display="flex" flexDirection="column" p={6} overflow="auto">
       <ClientsHeader
         search={search}
-        onSearchChange={(val) => {
-          setSearch(val);
-          setPageParams((prev) => ({ ...prev, page: 0 }));
-        }}
-        onCreateSuccess={() => fetchData(search)}
+        onSearchChange={handleSearchChange}
+        onCreateSuccess={handleActionSuccess}
       />
-
       {error ? (
-        <LoadingError onRetry={() => fetchData(search)} />
+        <ErrorView onRetry={handleRetry} />
       ) : isLoading || !data ? (
-        <PageLoader title="Загружаем пользователей" />
-      ) : data?.content && data.content.length > 0 ? (
+        <LoadingView title="Загружаем пользователей" />
+      ) : data.content.length > 0 ? (
         <ClientsTable
           data={data}
           pageParams={pageParams}
-          setPageParams={setPageParams}
-          onActionSuccess={() => fetchData(search)}
+          setPageParams={setParams}
+          onActionSuccess={handleActionSuccess}
         />
       ) : (
-        <EmptyState icon={<FiUsers size="30px" />} title={'Клиенты не найдены'} />
+        <EmptyView icon={<FiUsers size="30px" />} title="Клиенты не найдены" />
       )}
     </Box>
   );

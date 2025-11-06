@@ -1,6 +1,6 @@
 import { Box, Text, Heading, Button } from '@chakra-ui/react';
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AppRoutes } from '@routes';
 
 export const NotFound: React.FC = () => {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ export const NotFound: React.FC = () => {
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
-      height="100vh"
+      minH="100vh"
       textAlign="center"
       p={6}
       color="white"
@@ -20,14 +20,10 @@ export const NotFound: React.FC = () => {
       <Heading size="6xl" mb={4}>
         404
       </Heading>
-      <Text fontSize="xl" mb={6}>
+      <Text fontSize="xl" mb={6} color="gray.400">
         Страница не найдена
       </Text>
-      <Button
-        colorScheme="teal"
-        size="lg"
-        onClick={() => navigate('/')}
-      >
+      <Button colorScheme="teal" size="lg" onClick={() => navigate(AppRoutes.DASHBOARD)}>
         На главную
       </Button>
     </Box>
