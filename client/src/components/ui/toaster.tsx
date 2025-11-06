@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   Toaster as ChakraToaster,
   Portal,
@@ -12,17 +13,13 @@ export const toaster = createToaster({
   pauseOnPageIdle: true,
 });
 
-export const Toaster = () => {
+export const Toaster = (): React.ReactElement => {
   return (
     <Portal>
       <ChakraToaster toaster={toaster} insetInline={{ mdDown: '4' }}>
         {(toast) => (
           <Toast.Root width={{ md: 'sm' }}>
-            {toast.type === 'loading' ? (
-              <Spinner size="sm" color="blue.solid" />
-            ) : (
-              <Toast.Indicator />
-            )}
+            {toast.type === 'loading' ? <Spinner size="sm" color="white" /> : <Toast.Indicator />}
             <Stack gap="1" flex="1" maxWidth="100%">
               {toast.title && <Toast.Title>{toast.title}</Toast.Title>}
               {toast.description && <Toast.Description>{toast.description}</Toast.Description>}

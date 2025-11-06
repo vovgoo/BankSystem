@@ -20,7 +20,7 @@ export const DeleteAccountDialog: React.FC<DeleteAccountDialogProps> = ({
     onClose();
   });
 
-  const handleConfirm = () => {
+  const handleConfirm = (): void => {
     mutation.mutate(accountId);
   };
 

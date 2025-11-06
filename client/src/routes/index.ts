@@ -4,4 +4,5 @@ export const AppRoutes = {
   CLIENT_DETAILS: '/client/:id',
 } as const;
 
-export const createClientDetailsRoute = (id: string) => AppRoutes.CLIENT_DETAILS.replace(':id', id);
+export const createClientDetailsRoute = (id: string): string =>
+  AppRoutes.CLIENT_DETAILS.replace(':id', id);

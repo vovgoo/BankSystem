@@ -41,13 +41,13 @@ export const ClientDetailActionMenu: React.FC<ClientDetailActionMenuProps> = ({
       value: 'edit',
       icon: <FiEdit2 />,
       label: 'Изменить',
-      onSelect: () => setOpenDialog(ClientDetailDialogType.UPDATE),
+      onSelect: (): void => setOpenDialog(ClientDetailDialogType.UPDATE),
     },
     {
       value: 'delete',
       icon: <FiTrash2 />,
       label: 'Удалить',
-      onSelect: () => setOpenDialog(ClientDetailDialogType.DELETE),
+      onSelect: (): void => setOpenDialog(ClientDetailDialogType.DELETE),
     },
   ];
 

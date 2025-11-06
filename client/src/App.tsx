@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, type ReactElement } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { MainLayout, ErrorBoundary, LoadingView } from '@components';
 import { AppRoutes } from './routes';
@@ -8,7 +8,7 @@ const Clients = lazy(() => import('@pages').then((m) => ({ default: m.Clients })
 const ClientDetails = lazy(() => import('@pages').then((m) => ({ default: m.ClientDetails })));
 const NotFound = lazy(() => import('@pages').then((m) => ({ default: m.NotFound })));
 
-function App() {
+function App(): ReactElement {
   return (
     <BrowserRouter>
       <ErrorBoundary>

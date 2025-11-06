@@ -24,7 +24,7 @@ const STAT_ITEMS: Omit<StatItem, 'value'>[] = [
   { id: 'min-balance', label: 'Мин. баланс' },
 ];
 
-const getStatValue = (data: StatsResponse, id: string) => {
+const getStatValue = (data: StatsResponse, id: string): number => {
   switch (id) {
     case 'total-clients':
       return data.totalClients;
@@ -54,7 +54,7 @@ export const Dashboard: React.FC = () => {
     if (!data) return [];
     return STAT_ITEMS.map((item) => ({
       ...item,
-      value: getStatValue(data, item.id),
+      value: getStatValue(data as StatsResponse, item.id),
     }));
   }, [data]);
 

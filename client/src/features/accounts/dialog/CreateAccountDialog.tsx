@@ -21,8 +21,8 @@ export const CreateAccountDialog: React.FC<CreateAccountDialogProps> = ({
     onClose();
   });
 
-  const handleConfirm = () => {
-    mutation.mutate();
+  const handleConfirm = (): void => {
+    mutation.mutate(undefined);
   };
 
   return (

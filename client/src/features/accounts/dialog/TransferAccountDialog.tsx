@@ -39,7 +39,7 @@ export const TransferAccountDialog: React.FC<TransferAccountDialogProps> = ({
     }
   }, [isOpen, accountId, form]);
 
-  const handleSubmit = (data: TransferFormData) => {
+  const handleSubmit = (data: TransferFormData): void => {
     mutation.mutate(data);
   };
 

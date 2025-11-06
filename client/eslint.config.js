@@ -43,6 +43,15 @@ export default defineConfig([
         {
           selector: 'variableLike',
           format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
+          filter: {
+            regex: '^_',
+            match: false,
+          },
+        },
+        {
+          selector: 'parameter',
+          format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
+          leadingUnderscore: 'allow',
         },
         {
           selector: 'typeLike',

@@ -41,19 +41,21 @@ export const ClientActionMenu: React.FC<ClientActionsMenuProps> = ({ clientId, o
       value: 'view',
       icon: <FiEye />,
       label: 'Подробнее',
-      onSelect: () => navigate(createClientDetailsRoute(clientId)),
+      onSelect: (): void => {
+        void navigate(createClientDetailsRoute(clientId));
+      },
     },
     {
       value: 'edit',
       icon: <FiEdit2 />,
       label: 'Изменить',
-      onSelect: () => setOpenDialog(ClientDialogType.UPDATE),
+      onSelect: (): void => setOpenDialog(ClientDialogType.UPDATE),
     },
     {
       value: 'delete',
       icon: <FiTrash2 />,
       label: 'Удалить',
-      onSelect: () => setOpenDialog(ClientDialogType.DELETE),
+      onSelect: (): void => setOpenDialog(ClientDialogType.DELETE),
     },
   ];
 

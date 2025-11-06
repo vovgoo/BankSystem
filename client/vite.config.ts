@@ -5,8 +5,8 @@ import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const srcPath = path.resolve(__dirname, 'src');
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+const srcPath = path.resolve(dirname, 'src');
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],

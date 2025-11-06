@@ -27,10 +27,12 @@ export const FormDialog = <T extends FieldValues>({
   submitColorScheme = 'teal',
   children,
   footerActions,
-}: FormDialogProps<T>) => {
-  const handleSubmit = form.handleSubmit((data) => {
-    onSubmit(data);
-  });
+}: FormDialogProps<T>): React.ReactElement => {
+  const handleSubmit: (e?: React.BaseSyntheticEvent) => Promise<void> = form.handleSubmit(
+    (data: T): void => {
+      onSubmit(data);
+    }
+  );
 
   useEffect(() => {
     if (isOpen) {
