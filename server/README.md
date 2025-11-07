@@ -162,15 +162,19 @@ java -jar build/libs/BankSystem-0.0.1-SNAPSHOT.jar
 
 ```bash
 # Сборка образа
-docker build -t bank-system:latest .
+docker build -t banksystem-server:latest .
 
 # Запуск контейнера
-docker run -p 8080:8080 \
+docker run -d \
+  --name banksystem-server \
   -e SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5433/BankSystem \
   -e SPRING_DATASOURCE_USERNAME=vovgoo \
   -e SPRING_DATASOURCE_PASSWORD=StrongestLocalPassword \
-  bank-system:latest
+  -e CORS_ALLOWED_ORIGINS=http://localhost:3000 \
+  banksystem-server:latest
 ```
+
+> 💡 **Примечание:** В production через docker-compose порт 8080 не экспортируется наружу для безопасности. Сервер доступен только внутри Docker сети через клиент (nginx прокси).
 
 ---
 
