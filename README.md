@@ -25,13 +25,9 @@
 
 > ⚠️ **Важно:** Этот проект создан исключительно для образовательных целей и обучения технологиям разработки. Он не предназначен для использования в production среде или для реальных банковских операций.
 
-<div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
-
-<img src="docs/images/client1.png" alt="Client 1" style="width: 90%; margin: 20px 0;" />
-<img src="docs/images/client2.png" alt="Client 2" style="width: 90%; margin: 20px 0;" />
-<img src="docs/images/client3.png" alt="Client 3" style="width: 90%; margin: 20px 0;" />
-
-</div>
+<img src="docs/images/client1.png" alt="Client 1" style="width: 100%;" />
+<img src="docs/images/client2.png" alt="Client 2" style="width: 100%;" />
+<img src="docs/images/client3.png" alt="Client 3" style="width: 100%;" />
 
 ### ✨ Основные возможности
 
