@@ -13,8 +13,9 @@ export class ApiClient {
   private axiosInstance: AxiosInstance;
 
   constructor(config: ApiClientConfig = {}) {
+    const defaultBaseURL = import.meta.env.VITE_API_URL || '';
     this.axiosInstance = axios.create({
-      baseURL: config.baseURL ?? import.meta.env.VITE_API_URL ?? 'http://localhost:8080',
+      baseURL: config.baseURL ?? defaultBaseURL,
       timeout: config.timeout ?? 30000,
       headers: {
         'Content-Type': 'application/json',

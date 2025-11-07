@@ -28,32 +28,46 @@ export default defineConfig({
       '@theme': path.resolve(srcPath, 'theme'),
       '@theme/*': path.resolve(srcPath, 'theme', '*'),
     },
+    dedupe: ['react', 'react-dom', '@tanstack/react-query', '@emotion/react', '@emotion/styled'],
+  },
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      'react/jsx-runtime',
+      'react/jsx-dev-runtime',
+      'scheduler',
+      '@tanstack/react-query',
+      '@emotion/react',
+      '@emotion/styled',
+      '@chakra-ui/react',
+    ],
+    esbuildOptions: {
+      target: 'esnext',
+    },
+    force: false,
   },
   build: {
     outDir: 'dist',
     sourcemap: true,
+    commonjsOptions: {
+      include: [/node_modules/],
+      transformMixedEsModules: true,
+    },
     rollupOptions: {
+      preserveEntrySignatures: 'strict',
       output: {
-        manualChunks: (id) => {
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
-              return 'vendor-react';
-            }
-            if (id.includes('@chakra-ui')) {
-              return 'vendor-ui';
-            }
-            if (id.includes('axios')) {
-              return 'vendor-http';
-            }
-            return 'vendor';
-          }
-        },
-        chunkFileNames: 'js/[name]-[hash].js',
+        manualChunks: undefined,
         entryFileNames: 'js/[name]-[hash].js',
+        chunkFileNames: 'js/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]',
       },
     },
     chunkSizeWarningLimit: 1000,
+    modulePreload: {
+      polyfill: true,
+    },
+    minify: 'esbuild',
   },
   server: {
     port: 5173,
